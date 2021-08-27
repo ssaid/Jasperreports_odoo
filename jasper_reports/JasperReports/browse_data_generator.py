@@ -354,7 +354,7 @@ class CsvBrowseDataGenerator(BrowseDataGenerator):
         # One field (many2one, many2many or one2many) can appear several times
         # Process each "root" field only once by using a set.
         unrepeated = set([field.partition('/')[0] for field in fields])
-
+        field_type = ''
         for field in unrepeated:
             root = field.partition('/')[0]
             current_path = root
