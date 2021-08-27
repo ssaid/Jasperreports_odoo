@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="work_order" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="OPENERP_RELATIONS" value="[&apos;work_ids&apos;]"/>
+	<property name="ireport.zoom" value="1.2396694214876096"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/ilich/Proyectos/dpisa/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="parameter1" class="java.lang.Object"/>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="Logo-logo" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Compania-company_id/Logo-logo]]></fieldDescription>
+	</field>
+	<field name="LogoProyecto-logo" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Proyecto-project_project_id/Contrato_Analitica-analytic_account_id/Compania-company_id/Logo-logo]]></fieldDescription>
+	</field>
+	<field name="Logo-logo2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Company-company_id/Logo-logo]]></fieldDescription>
+	</field>
+	<field name="Imputacion-stage_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Imputacion-stage_id]]></fieldDescription>
+	</field>
+	<field name="Referencia-reference" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Referencia-reference]]></fieldDescription>
+	</field>
+	<field name="Registro_Plano-register" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Registro_Plano-register]]></fieldDescription>
+	</field>
+	<field name="Fecha_real_de_inicio-date_start" class="java.util.Date">
+		<fieldDescription><![CDATA[/data/record/Fecha_real_de_inicio-date_start]]></fieldDescription>
+	</field>
+	<field name="Fecha_real_de_fin-date_end" class="java.util.Date">
+		<fieldDescription><![CDATA[/data/record/Fecha_real_de_fin-date_end]]></fieldDescription>
+	</field>
+	<field name="Proyecto-project_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Proyecto-project_id]]></fieldDescription>
+	</field>
+	<field name="Solicitado_por-solicited_by_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Solicitado_por-solicited_by_id/name]]></fieldDescription>
+	</field>
+	<field name="Adicional-aditional" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Adicional-aditional]]></fieldDescription>
+	</field>
+	<field name="Fecha_planificada_de_fin-planned_date_end" class="java.util.Date">
+		<fieldDescription><![CDATA[/data/record/Fecha_planificada_de_fin-planned_date_end]]></fieldDescription>
+	</field>
+	<field name="Fecha_planificada_de_inicio-planned_date_start" class="java.util.Date">
+		<fieldDescription><![CDATA[/data/record/Fecha_planificada_de_inicio-planned_date_start]]></fieldDescription>
+	</field>
+	<field name="Conforme_coordinador_de_proyecto-accordance_work_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Conforme_coordinador_de_proyecto-accordance_work_id/name]]></fieldDescription>
+	</field>
+	<field name="Conforme_jefe_de_planta-responsible_for_execution_id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Conforme_jefe_de_planta-responsible_for_execution_id/name]]></fieldDescription>
+	</field>
+	<field name="Horas_totales-total_hours" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Horas_totales-total_hours]]></fieldDescription>
+	</field>
+	<field name="Nombre-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Nombre-name]]></fieldDescription>
+	</field>
+	<field name="Nota-note" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Nota-note]]></fieldDescription>
+	</field>
+	<field name="Fecha-date" class="java.util.Date">
+		<fieldDescription><![CDATA[/data/record/Trabajos-work_ids/Fecha-date]]></fieldDescription>
+	</field>
+	<field name="Tiempo_invertido-hours" class="java.lang.Float">
+		<fieldDescription><![CDATA[/data/record/Trabajos-work_ids/Tiempo_invertido-hours]]></fieldDescription>
+	</field>
+	<field name="Resumen_del_trabajo-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Trabajos-work_ids/Resumen_del_trabajo-name]]></fieldDescription>
+	</field>
+	<field name="Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Trabajos-work_ids/Realizado_por-user_id/Name-name]]></fieldDescription>
+	</field>
+	<field name="Proyecto-codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Proyecto-project_id/code]]></fieldDescription>
+	</field>
+	<field name="Imputacion-stage_id_1" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Imputacion-stage_id/name]]></fieldDescription>
+	</field>
+	<field name="codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Trabajos-work_ids/code]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/name]]></fieldDescription>
+	</field>
+	<variable name="codigo_proyecto+tarea" class="java.lang.String">
+		<variableExpression><![CDATA[$F{Proyecto-codigo} + " " + $F{Imputacion-stage_id}]]></variableExpression>
+	</variable>
+	<variable name="ref+nombre" class="java.lang.String">
+		<variableExpression><![CDATA[$F{Referencia-reference} + " - " + $F{name}]]></variableExpression>
+	</variable>
+	<group name="task_ids">
+		<groupExpression><![CDATA[$F{Referencia-reference}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<subreport>
+					<reportElement x="3" y="0" width="566" height="14"/>
+					<dataSourceExpression><![CDATA[$P{parameter1}]]></dataSourceExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "orden_trabajo_detalle.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="139">
+				<staticText>
+					<reportElement x="242" y="83" width="104" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[SOLICITADO POR]]></text>
+				</staticText>
+				<line>
+					<reportElement x="228" y="79" width="127" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="135" y="107" width="314" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SEGUIMIENTO POR PARTE DE LOS EJECUTOR/ES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="47" y="125" width="55" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[FECHA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="107" y="125" width="320" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[OBSERVACIONES / DESCRIPCION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="431" y="125" width="44" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[HORAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="476" y="125" width="93" height="14"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[EJECUTOR]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="105" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="123" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="100" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="105" width="1" height="34"/>
+				</line>
+				<line>
+					<reportElement x="103" y="124" width="1" height="15"/>
+				</line>
+				<line>
+					<reportElement x="429" y="124" width="1" height="15"/>
+				</line>
+				<line>
+					<reportElement x="476" y="124" width="1" height="15"/>
+				</line>
+				<textField>
+					<reportElement x="214" y="63" width="153" height="14"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Solicitado_por-solicited_by_id}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="571" y="2" width="1" height="98"/>
+				</line>
+				<staticText>
+					<reportElement x="3" y="6" width="105" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[REGISTRO/PLANO:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="23" width="572" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="3" y="27" width="189" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[FECHA DE INICIO PLANIFICADO:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="295" y="27" width="174" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[FECHA DE FIN PLANIFICADO:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="2" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="44" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="571" y="106" width="1" height="33"/>
+				</line>
+				<textField>
+					<reportElement x="107" y="6" width="347" height="14"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Registro_Plano-register}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="190" y="27" width="100" height="14"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Fecha_planificada_de_inicio-planned_date_start}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="469" y="27" width="100" height="14"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Fecha_planificada_de_fin-planned_date_end}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="3" width="1" height="97"/>
+				</line>
+				<staticText>
+					<reportElement x="5" y="125" width="34" height="14"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[ID]]></text>
+				</staticText>
+				<line>
+					<reportElement x="45" y="124" width="1" height="15"/>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band height="752" splitType="Stretch">
+			<staticText>
+				<reportElement x="83" y="740" width="310" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<text><![CDATA[Rev: 01     Fecha: 28/06/2017     Elaboro: SH     Aprobo: MF]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="400" y="740" width="80" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="471" y="740" width="23" height="12"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="103">
+			<image hAlign="Center">
+				<reportElement x="410" y="0" width="162" height="100"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Logo-logo2}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="192" y="21" width="184" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="572" height="100"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="168" y="57" width="232" height="39"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ORDEN DE TRABAJO PARA TALLER
+BASE MAR DEL PLATA]]></text>
+			</staticText>
+			<line>
+				<reportElement x="162" y="0" width="1" height="100"/>
+			</line>
+			<line>
+				<reportElement x="405" y="0" width="1" height="100"/>
+			</line>
+			<line>
+				<reportElement x="163" y="51" width="242" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="24" y="41" width="114" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RG-PFN-05]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="76">
+			<line>
+				<reportElement x="184" y="40" width="388" height="1"/>
+			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="0" width="572" height="20" backcolor="#D9D6D6"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="251" y="0" width="70" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Referencia-reference}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="78" y="0" width="184" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDEN DE TRABAJO No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="20" width="54" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[EQUIPO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="40" width="177" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[COSTO PRESUPUESTADO (hs):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="40" width="70" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[ADICIONAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="20" width="70" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[PARTE:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="74" width="572" height="1"/>
+			</line>
+			<line>
+				<reportElement x="394" y="20" width="1" height="54"/>
+			</line>
+			<line>
+				<reportElement x="183" y="20" width="1" height="54"/>
+			</line>
+			<staticText>
+				<reportElement x="3" y="22" width="76" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[PROYECTO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="469" y="40" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Adicional-aditional}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="79" y="22" width="102" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Proyecto-codigo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="571" y="19" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement x="0" y="20" width="1" height="54"/>
+			</line>
+			<staticText>
+				<reportElement x="3" y="40" width="76" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[TAREA:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="79" y="40" width="104" height="12"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Imputacion-stage_id_1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="318" y="0" width="241" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15">
+			<rectangle>
+				<reportElement x="0" y="1" width="572" height="14"/>
+			</rectangle>
+			<line>
+				<reportElement x="476" y="1" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="429" y="1" width="1" height="14"/>
+			</line>
+			<line>
+				<reportElement x="103" y="1" width="1" height="14"/>
+			</line>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="47" y="1" width="55" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Fecha-date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="108" y="1" width="321" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Resumen_del_trabajo-name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="430" y="1" width="47" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Tiempo_invertido-hours}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="477" y="1" width="94" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="1" width="34" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{codigo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="45" y="1" width="1" height="14"/>
+			</line>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="128">
+			<staticText>
+				<reportElement x="48" y="75" width="188" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[RESPONSABLE DE LA EJECUCIÓN]]></text>
+			</staticText>
+			<line>
+				<reportElement x="37" y="72" width="207" height="1"/>
+			</line>
+			<rectangle>
+				<reportElement x="0" y="9" width="572" height="20"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="97" y="90" width="84" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[(JEFE DE TALLER)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="367" y="75" width="143" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[CONFORME DE TRABAJO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="335" y="72" width="207" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="385" y="90" width="106" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[(JEFE DE PROYECTO)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="12" width="119" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[FECHA REAL INICIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="12" width="100" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[FECHA REAL FIN:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="12" width="100" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[COSTO REAL (hs):]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="122" y="12" width="70" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Fecha_real_de_inicio-date_start}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="314" y="12" width="62" height="14"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Fecha_real_de_fin-date_end}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="68" y="56" width="146" height="14"/>
+				<textElement textAlignment="Center" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Conforme_jefe_de_planta-responsible_for_execution_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="349" y="56" width="174" height="14"/>
+				<textElement textAlignment="Center" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Conforme_coordinador_de_proyecto-accordance_work_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="12" width="34" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Horas_totales-total_hours}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

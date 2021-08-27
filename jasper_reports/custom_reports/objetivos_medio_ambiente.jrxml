@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="objetivos_medio_ambiente" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="af761ca0-3faa-4b02-bdfe-8a0d707bc5ca">
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[select po.name as objetivos_name FROM project_project pj
+			LEFT JOIN project_project_objectives ppo
+		ON pj.id = ppo.project_id
+			LEFT JOIN project_objective po
+		ON ppo.name = po.id
+			WHERE pj.id IN ($P{IDS}) and po.type='environment';]]>
+	</queryString>
+	<field name="objetivos_name" class="java.lang.String"/>
+	<variable name="IDS" class="java.lang.Object"/>
+	<background>
+		<band/>
+	</background>
+	<columnHeader>
+		<band height="14">
+			<printWhenExpression><![CDATA[$F{objetivos_name}.isEmpty().toString()=="false"]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="0" width="159" height="14" uuid="42736085-7fab-4899-9a13-c9337a03ad19"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true" isItalic="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Medio Ambiente]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16">
+			<printWhenExpression><![CDATA[$F{objetivos_name}.isEmpty().toString()=="false"]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="10" y="0" width="562" height="14" uuid="40d7a394-c051-415a-89a6-2abc656c5123"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["* " + $F{objetivos_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 4.0.0-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="projectos" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="87"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dpiAdapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="objetivos_calidad" class="java.lang.Object"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<parameter name="objetivos_seguridad" class="java.lang.Object"/>
+	<parameter name="objetivos_medio_ambiente" class="java.lang.Object"/>
+	<parameter name="archivos_adjuntos" class="java.lang.Object"/>
+	<parameter name="miembros" class="java.lang.Object"/>
+	<parameter name="riesgos" class="java.lang.Object"/>
+	<queryString language="SQL">
+		<![CDATA[select pp.date_start, pp.date as date_end, pp.id as project_id, pp.alcance, pp.code, pp.city, pp.partner_id, pp.certificacion, pp.establishment,
+		pp.name, pp.description, rp_client.name as client_name, rp_user.name as jefe,
+
+                /* image */
+		iat.store_fname AS "Company_image",
+		icp.value AS "Filestore_path"
+		
+		FROM project_project pp
+
+                /* image */
+		JOIN res_company rc ON rc.id = pp.company_id
+		JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+		LEFT JOIN ir_attachment iat
+			ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+		LEFT JOIN ir_config_parameter icp 
+			ON icp.key = 'filestore.path'
+
+left join res_partner rp_client
+	ON rp_client.id = pp.partner_id
+left join res_users users
+	ON users.id = pp.user_id
+left join res_partner rp_user
+	on rp_user.id = users.partner_id
+
+	WHERE $X{IN, pp.id, IDS};]]>
+	</queryString>
+	<field name="date_start" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="date_start"/>
+		<property name="com.jaspersoft.studio.field.label" value="date_start"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Start Date]]></fieldDescription>
+	</field>
+	<field name="date_end" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="date_end"/>
+		<property name="com.jaspersoft.studio.field.label" value="date_end"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+	</field>
+	<field name="project_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="project_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="project_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+	</field>
+	<field name="alcance" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="alcance"/>
+		<property name="com.jaspersoft.studio.field.label" value="alcance"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Scope]]></fieldDescription>
+	</field>
+	<field name="code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="code"/>
+		<property name="com.jaspersoft.studio.field.label" value="code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Code]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="city"/>
+		<property name="com.jaspersoft.studio.field.label" value="city"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[City]]></fieldDescription>
+	</field>
+	<field name="partner_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="partner_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="partner_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Customer]]></fieldDescription>
+	</field>
+	<field name="certificacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="certificacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="certificacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Certifications]]></fieldDescription>
+	</field>
+	<field name="establishment" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="establishment"/>
+		<property name="com.jaspersoft.studio.field.label" value="establishment"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Establishment]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Name]]></fieldDescription>
+	</field>
+	<field name="description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="description"/>
+		<property name="com.jaspersoft.studio.field.label" value="description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+		<fieldDescription><![CDATA[Description]]></fieldDescription>
+	</field>
+	<field name="client_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="client_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="client_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="jefe" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="jefe"/>
+		<property name="com.jaspersoft.studio.field.label" value="jefe"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="Company_image" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Company_image"/>
+		<property name="com.jaspersoft.studio.field.label" value="Company_image"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ir_attachment"/>
+	</field>
+	<field name="Filestore_path" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Filestore_path"/>
+		<property name="com.jaspersoft.studio.field.label" value="Filestore_path"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ir_config_parameter"/>
+	</field>
+	<group name="cuadro_principal">
+		<groupHeader>
+			<band height="125">
+				<rectangle>
+					<reportElement x="0" y="105" width="572" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<line>
+					<reportElement x="0" y="45" width="572" height="1"/>
+				</line>
+				<rectangle>
+					<reportElement mode="Opaque" x="0" y="5" width="572" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="183" y="5" width="184" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[PROYECTO]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="0" y="25" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="0" y="45" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="5" y="25" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Nro. Proyecto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="5" y="45" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Nro. Licitación]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="235" y="25" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<rectangle>
+					<reportElement mode="Opaque" x="235" y="45" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="240" y="45" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="1_1_2">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Descripción]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="240" y="25" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="1_1_2">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Cliente]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="0" y="65" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="5" y="65" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Localidad]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement mode="Opaque" x="235" y="65" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="240" y="65" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Establecimiento]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement mode="Opaque" x="235" y="85" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="0" y="85" width="100" height="20" backcolor="#D9D6D6"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="5" y="85" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Jefe de proyecto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="240" y="85" width="95" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="1_1_2">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Jefe de obra]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="24" y="105" width="95" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Afectados]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="314" y="105" width="95" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Afectados]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="162" y="105" width="95" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Área]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="452" y="105" width="95" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Área]]></text>
+				</staticText>
+				<line>
+					<reportElement x="141" y="105" width="1" height="20"/>
+				</line>
+				<line>
+					<reportElement x="434" y="105" width="1" height="20"/>
+				</line>
+				<line>
+					<reportElement x="286" y="105" width="1" height="20"/>
+				</line>
+				<line>
+					<reportElement x="0" y="65" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="85" width="572" height="1"/>
+				</line>
+				<line>
+					<reportElement x="571" y="25" width="1" height="100"/>
+				</line>
+				<textField>
+					<reportElement x="110" y="25" width="120" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{code}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="110" y="66" width="120" height="18"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{city}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="110" y="85" width="120" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{jefe}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="340" y="25" width="228" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{client_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="340" y="66" width="228" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{establishment}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="340" y="45" width="188" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="miembros">
+		<groupHeader>
+			<band height="22">
+				<subreport>
+					<reportElement x="0" y="0" width="572" height="22"/>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{project_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "miembros.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="textos">
+		<groupExpression><![CDATA[$F{description}]]></groupExpression>
+		<groupHeader>
+			<band height="79">
+				<staticText>
+					<reportElement x="2" y="42" width="256" height="14">
+						<printWhenExpression><![CDATA[$F{description}.isEmpty().toString()=="false"]]></printWhenExpression>
+					</reportElement>
+					<textElement lineSpacing="Single">
+						<font size="11" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Descripción del proyecto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="4" width="512" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Descripción de las necesidades del Cliente]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="22" width="409" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Ver pliego de licitación en caso de que exista.]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement isPrintRepeatedValues="false" x="10" y="60" width="572" height="14">
+						<printWhenExpression><![CDATA[$F{description}.isEmpty().toString()=="false"]]></printWhenExpression>
+					</reportElement>
+					<textElement lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="objetivos_calidad">
+		<groupHeader>
+			<band height="16">
+				<staticText>
+					<reportElement x="2" y="1" width="256" height="14"/>
+					<textElement lineSpacing="Single">
+						<font size="11" isBold="true" isItalic="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Objetivos Medibles del Proyecto]]></text>
+				</staticText>
+			</band>
+			<band>
+				<subreport isUsingCache="false" runToBottom="false">
+					<reportElement isPrintRepeatedValues="false" x="10" y="0" width="572" height="0"/>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{project_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "objetivos_calidad.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band>
+				<subreport>
+					<reportElement isPrintRepeatedValues="false" x="10" y="0" width="572" height="0"/>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{project_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "objetivos_seguridad.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band>
+				<subreport>
+					<reportElement isPrintRepeatedValues="false" x="10" y="0" width="572" height="0"/>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{project_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "objetivos_medio_ambiente.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="alcance">
+		<groupExpression><![CDATA[$F{alcance}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="2" y="1" width="256" height="14">
+						<printWhenExpression><![CDATA[$F{alcance}.isEmpty().toString()=="false"]]></printWhenExpression>
+					</reportElement>
+					<textElement lineSpacing="Single">
+						<font size="11" isBold="true" isItalic="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Alcance]]></text>
+				</staticText>
+				<textField>
+					<reportElement isPrintRepeatedValues="false" x="10" y="19" width="563" height="14">
+						<printWhenExpression><![CDATA[$F{alcance}.isEmpty().toString()=="false"]]></printWhenExpression>
+					</reportElement>
+					<textElement lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{alcance}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="tiempo_ejecucion">
+		<groupExpression><![CDATA[$F{date_start}]]></groupExpression>
+		<groupHeader>
+			<band height="54">
+				<staticText>
+					<reportElement x="2" y="2" width="256" height="14"/>
+					<textElement lineSpacing="Single">
+						<font size="11" isBold="true" isItalic="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Tiempo de ejecución]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="18" width="109" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Fecha de inicio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="34" width="109" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Fecha prevista de fin]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement isPrintRepeatedValues="false" x="119" y="18" width="100" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{date_start}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement isPrintRepeatedValues="false" x="119" y="34" width="99" height="14"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{date_end}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="riesgos">
+		<groupHeader>
+			<band height="26">
+				<subreport>
+					<reportElement x="0" y="0" width="572" height="22"/>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{project_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "riesgos.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="certificacion">
+		<groupExpression><![CDATA[$F{certificacion}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="2" y="4" width="256" height="14">
+						<printWhenExpression><![CDATA[$F{certificacion}.isEmpty().toString()=="false"]]></printWhenExpression>
+					</reportElement>
+					<textElement lineSpacing="Single">
+						<font size="11" isBold="true" isItalic="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Certificación]]></text>
+				</staticText>
+				<textField>
+					<reportElement isPrintRepeatedValues="false" x="10" y="22" width="563" height="14">
+						<printWhenExpression><![CDATA[$F{certificacion}.isEmpty().toString()=="false"]]></printWhenExpression>
+					</reportElement>
+					<textElement lineSpacing="Single">
+						<font size="11"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{certificacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="archivos_adjuntos">
+		<groupHeader>
+			<band>
+				<subreport isUsingCache="false" runToBottom="false">
+					<reportElement isPrintRepeatedValues="false" x="10" y="0" width="572" height="0"/>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{project_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "archivos_adjuntos.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="105">
+			<image hAlign="Center">
+				<reportElement x="410" y="0" width="162" height="100"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path}+$F{Company_image}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="192" y="21" width="184" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="572" height="100"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="192" y="61" width="184" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ACTA DE INICIO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="162" y="0" width="1" height="100"/>
+			</line>
+			<line>
+				<reportElement x="405" y="0" width="1" height="100"/>
+			</line>
+			<line>
+				<reportElement x="163" y="51" width="242" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="24" y="41" width="114" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RG-CM-01]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement x="449" y="3" width="80" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="529" y="3" width="40" height="12"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="139" y="3" width="286" height="12"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[Rev: 1     Fecha: 19/09/12     Elaboro: CK     Aprobo: CG]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
