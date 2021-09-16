@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="objetivos_seguridad" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="10e10dc3-ea98-44b1-8261-7da77a41d843">
+	<property name="ireport.zoom" value="1.1"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[select he.name as employee_name, hd.name as employee_department FROM project_project pj
+JOIN project_favorite_user_rel pfur ON pj.id = pfur.project_id
+JOIN res_users ru ON pfur.user_id = ru.id
+JOIN hr_employee he on ru.id = he.user_id
+JOIN hr_department hd on he.department_id = hd.id
+WHERE pj.id IN ($P{IDS});]]>
+	</queryString>
+	<field name="employee_name" class="java.lang.String"/>
+	<field name="employee_department" class="java.lang.String"/>
+	<variable name="IDS" class="java.lang.Object"/>
+	<background>
+		<band/>
+	</background>
+	<detail>
+		<band height="17">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="572" height="17" uuid="04c49d21-5f2e-4684-be9d-21084e65dc5c"/>
+			</rectangle>
+			<line>
+				<reportElement x="286" y="1" width="1" height="16" uuid="fca386b2-42f3-44c2-a9b3-c3f422a37596"/>
+			</line>
+			<textField>
+				<reportElement x="9" y="0" width="131" height="17" uuid="20513747-80bb-4148-b77d-f77d22dee254"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{employee_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="136" height="17" uuid="3feffac3-8c98-41c7-9876-2af6e376f801"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{employee_department}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

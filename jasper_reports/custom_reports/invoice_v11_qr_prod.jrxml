@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_v11" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="208"/>
+	<property name="ireport.y" value="608"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dpiAdapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="145"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="848"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="568"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="418"/>
+	<style name="row_style" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" forecolor="#000000" backcolor="#DFDBDB" hAlign="Center" vAlign="Middle" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 1]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#F1F9FF" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Temporales\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[WITH totals AS (
+SELECT
+ai.id as invoice_id,
+SUM (ait.amount)as sum_amount
+
+FROM account_invoice ai
+JOIN account_invoice_tax ait
+	ON ai.id = ait.invoice_id
+JOIN account_tax at
+	ON ait.tax_id = at.id
+
+WHERE at.tax_group = 'vat'
+AND ait.name ILIKE  '%iva%'
+
+GROUP BY ai.id
+)
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+/*IVA */
+totals.sum_amount as "iva_amount",
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSABLE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSABLE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.name as "moneda_nombre",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.comment as "factura_comentarios",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+account_invoice.cae_due_date as "cae_fecha",
+wsfe_voucher_type.name AS "tipo_factura",
+LPAD(wsfe_voucher_type.code::text, 3, '0') AS "codigo_tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.amount as "percepcion_monto",
+perception_perception.code as "percepcion_code",
+ROUND(account_invoice.currency_rate, 4) AS "invoice_currency_rate",
+ROUND(totals.sum_amount * account_invoice.currency_rate, 2) as "vat_total",
+
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join totals on totals.invoice_id = account_invoice.id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join perception_perception on perception_tax_line.perception_id=perception_perception.id
+
+
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+WHERE $X{IN, account_invoice.id, IDS};]]>
+	</queryString>
+	<field name="company_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_company"/>
+	</field>
+	<field name="company_email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_email"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_company"/>
+	</field>
+	<field name="company_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_phone"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_company"/>
+	</field>
+	<field name="company_cuit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_cuit"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_cuit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="company_website" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_website"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_website"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="company_street" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_street"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_street"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="iva_amount" class="java.math.BigDecimal"/>
+	<field name="nombre_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="direccion_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="direccion_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="direccion_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="cuit_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cuit_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="cuit_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="id_cliente" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="condicion_venta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="condicion_venta"/>
+		<property name="com.jaspersoft.studio.field.label" value="condicion_venta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_payment_term"/>
+	</field>
+	<field name="tel_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tel_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="tel_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="cond_iva" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cond_iva"/>
+		<property name="com.jaspersoft.studio.field.label" value="cond_iva"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_fiscal_position"/>
+	</field>
+	<field name="producto_p_unit" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="producto_p_unit"/>
+		<property name="com.jaspersoft.studio.field.label" value="producto_p_unit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice_line"/>
+	</field>
+	<field name="producto_cant" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="producto_cant"/>
+		<property name="com.jaspersoft.studio.field.label" value="producto_cant"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice_line"/>
+	</field>
+	<field name="producto_descripcion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="producto_descripcion"/>
+		<property name="com.jaspersoft.studio.field.label" value="producto_descripcion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice_line"/>
+	</field>
+	<field name="moneda_nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="moneda_nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="moneda_nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_currency"/>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="moneda"/>
+		<property name="com.jaspersoft.studio.field.label" value="moneda"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_currency"/>
+	</field>
+	<field name="date_invoice" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="date_invoice"/>
+		<property name="com.jaspersoft.studio.field.label" value="date_invoice"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="Invoice_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Invoice_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="Invoice_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="vencimiento_factura" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="vencimiento_factura"/>
+		<property name="com.jaspersoft.studio.field.label" value="vencimiento_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="n_factura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="n_factura"/>
+		<property name="com.jaspersoft.studio.field.label" value="n_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="factura_comentarios" class="java.lang.String"/>
+	<field name="total_sin_impuestos" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_sin_impuestos"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_sin_impuestos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="total_factura" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_factura"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="impuesto_factura" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="impuesto_factura"/>
+		<property name="com.jaspersoft.studio.field.label" value="impuesto_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="denominacion_factura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="denominacion_factura"/>
+		<property name="com.jaspersoft.studio.field.label" value="denominacion_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="invoice_denomination"/>
+	</field>
+	<field name="cae_factura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cae_factura"/>
+		<property name="com.jaspersoft.studio.field.label" value="cae_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="cae_fecha" class="java.sql.Date"/>
+	<field name="tipo_factura" class="java.lang.String"/>
+	<field name="codigo_tipo_factura" class="java.lang.String"/>
+	<field name="percepcion_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="percepcion_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="percepcion_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="perception_tax_line"/>
+	</field>
+	<field name="percepcion_monto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="percepcion_monto"/>
+		<property name="com.jaspersoft.studio.field.label" value="percepcion_monto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="perception_tax_line"/>
+	</field>
+	<field name="percepcion_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="percepcion_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="percepcion_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="perception_perception"/>
+	</field>
+	<field name="invoice_currency_rate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="invoice_currency_rate"/>
+		<property name="com.jaspersoft.studio.field.label" value="invoice_currency_rate"/>
+	</field>
+	<field name="vat_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="vat_total"/>
+		<property name="com.jaspersoft.studio.field.label" value="vat_total"/>
+	</field>
+	<field name="Company_image" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Company_image"/>
+		<property name="com.jaspersoft.studio.field.label" value="Company_image"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ir_attachment"/>
+	</field>
+	<field name="qr_path" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="qr_path"/>
+		<property name="com.jaspersoft.studio.field.label" value="qr_path"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ir_config_parameter"/>
+	</field>
+	<field name="Filestore_path" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Filestore_path"/>
+		<property name="com.jaspersoft.studio.field.label" value="Filestore_path"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ir_config_parameter"/>
+	</field>
+	<variable name="IDS" class="java.lang.Object"/>
+	<group name="invoice_id" isStartNewPage="true" isResetPageNumber="true"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="290" width="555" height="400"/>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="295" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="173" width="555" height="107" backcolor="#FFFFFF"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="184" width="50" height="20"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="204" width="60" height="20"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Domicilio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="21" y="224" width="103" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condicion de IVA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="21" y="244" width="118" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condicion de Venta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="337" y="244" width="112" height="20"/>
+				<box bottomPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Vencimiento:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="10" width="555" height="150" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="280" y="16" width="272" height="30" forecolor="#000000"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_factura}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="364" y="52" width="172" height="20" forecolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["N° " + $F{n_factura}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="d/M/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="397" y="72" width="136" height="15" forecolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{date_invoice}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="230" y="20" width="50" height="50"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="364" y="130" width="172" height="12"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Inic. Activ.: " + "01/02/1999"]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="4" y="12" width="185" height="76"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path}+$F{Company_image}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="364" y="87" width="172" height="15" forecolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CUIT: " + $F{company_cuit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="364" y="102" width="186" height="15" forecolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["ING BRUTOS: (902) " + $F{company_cuit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="2" y="117" width="207" height="12" forecolor="#000000"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MAR DEL PLATA (7600)    ARGENTINA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="215" y="120" width="130" height="32" forecolor="#000000">
+					<printWhenExpression><![CDATA[$F{tipo_factura}.contains("Electr")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Pago en CBU informada.
+0070084920000033461731]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="207" y="72" width="157" height="32" forecolor="#000000">
+					<printWhenExpression><![CDATA[$F{tipo_factura}.contains("Electr")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Comprobante Titulo Ejecutivo
+según Ley 27440 y Art.523 C.C.y]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="337" y="184" width="27" height="20"/>
+				<box bottomPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tel.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="337" y="204" width="35" height="20"/>
+				<box bottomPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUIT:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="4" y="105" width="254" height="12" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{company_street} + "    Tel.: " + $F{company_phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="4" y="129" width="211" height="12" forecolor="#000000"/>
+				<box leftPadding="0" rightPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{company_website} + "    " + $F{company_email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="88" width="185" height="17"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{company_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="184" width="224" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{id_cliente} + " - " + $F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="133" y="244" width="124" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{condicion_venta}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="77" y="204" width="182" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{direccion_cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="337" y="224" width="70" height="20"/>
+				<box bottomPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ing. Brutos:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="362" y="184" width="146" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tel_cliente} != null ? $F{tel_cliente} : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="366" y="204" width="140" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cuit_cliente} != null ? $F{cuit_cliente} : ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="d/M/yyyy" isBlankWhenNull="true">
+				<reportElement x="444" y="244" width="102" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{vencimiento_factura}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="224" width="150" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cond_iva}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="230" y="20" width="50" height="41" forecolor="#000000"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{denominacion_factura}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="399" y="224" width="140" height="20"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cuit_cliente} != null ? $F{cuit_cliente} : ""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="row_style" positionType="Float" x="360" y="72" width="36" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="362" y="117" width="173" height="13" forecolor="#000000"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IVA Resp. Inscripto]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="230" y="61" width="50" height="9"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["cod. " + $F{codigo_tipo_factura}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement x="3" y="0" width="549" height="20" backcolor="#A3A3A3"/>
+				<graphicElement>
+					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="47" y="0" width="256" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="372" y="0" width="70" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio Unit.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="303" y="0" width="69" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="442" y="0" width="40" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bonif.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="482" y="0" width="70" height="20" backcolor="#FFFFFF"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="4" y="0" width="43" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<rectangle>
+				<reportElement style="row_style" stretchType="RelativeToTallestObject" x="3" y="0" width="549" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="50" y="1" width="254" height="14">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="85b52387-d7e5-45ef-a965-f25ccaad9dc2"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{producto_descripcion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
+				<reportElement x="385" y="1" width="62" height="14">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="00eaf66e-a2b8-4d6a-b53b-7c4e2ed1033c"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{producto_p_unit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="304" y="1" width="59" height="14">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0926d73b-22b6-46c5-aa15-ac37d78ae99b"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{producto_cant}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
+				<reportElement x="490" y="0" width="62" height="14">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="00eaf66e-a2b8-4d6a-b53b-7c4e2ed1033c"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{producto_p_unit} * $F{producto_cant}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="0" width="22" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="363" y="1" width="22" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="251" splitType="Prevent">
+			<staticText>
+				<reportElement x="307" y="179" width="160" height="14"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Factura Electronica / CAE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="209" width="56" height="14"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F. Vto.:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="87" width="555" height="70"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Opaque" x="304" y="88" width="86" height="14" backcolor="#A3A3A3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sub Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="390" y="88" width="78" height="14" backcolor="#A3A3A3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="468" y="88" width="86" height="14" backcolor="#A3A3A3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="294" y="87" width="1" height="70"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="87" width="99" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Observaciones:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#;(#,##0.00#-)">
+				<reportElement x="326" y="102" width="64" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{total_sin_impuestos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)">
+				<reportElement x="490" y="102" width="64" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{total_factura}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="30" y="170" width="84" height="81"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{qr_path}+"invoice_"+$F{Invoice_id}+".jpg"]]></imageExpression>
+			</image>
+			<textField pattern="#,##0.00#;(#,##0.00#-)">
+				<reportElement mode="Opaque" x="308" y="193" width="180" height="14" backcolor="#A3A3A3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cae_factura}!= null ? $F{cae_factura}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="102" width="22" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="304" y="102" width="22" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="102" width="22" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="5" y="46" width="550" height="41" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$F{moneda_nombre} != "ARS"]]></printWhenExpression>
+				</reportElement>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Los precios consignados estan valorados en " + $F{moneda_nombre} + ". A los efectos impositivos, el monto declarado del IVA es de: \$" + $F{vat_total} + ". Se considera una cotización de: " + $F{moneda}  + " 1 = \$ " + $F{invoice_currency_rate} + ". Al día de la cancelación efectiva del comprobante se tomará la correspondiente cotización de DOLAR BANCO NACION (Cotización Vendedora)"]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="252" y="21" width="295" height="25"/>
+				<subreportParameter name="IDS">
+					<subreportParameterExpression><![CDATA[$F{Invoice_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "invoice_v11_wholesaler_tax_subreport.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="#,##0.00#;(#,##0.00#-)">
+				<reportElement x="412" y="102" width="56" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{iva_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="360" y="209" width="128" height="14"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{cae_fecha}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2" y="112" width="292" height="45" isPrintWhenDetailOverflows="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{factura_comentarios}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

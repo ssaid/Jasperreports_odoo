@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 4.0.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificado_servicios" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dpiAdapter.xml"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+
+
+project_project.date as "fecha_caducidad",
+project_project.date_start as "fecha_inicio",
+project_project.period_days as "delta_tiempo",
+project_project.name as "nombre_proyecto",
+sale_order.confirmation_date as "fecha_presup",
+res_partner.name as "cliente",
+res_company.name as "compania",
+
+sale_order_line.name as "descripcion",
+sale_order_line.price_unit as "precio_unit",
+sale_order_line.product_uom_qty as "cantidad",
+sale_order_line.price_subtotal as "subtotal",
+res_currency.name as "moneda",
+
+
+sale_order.amount_total as "total",
+sale_order.client_order_ref as "ref_cliente",
+sale_order.note as "observaciones",
+rpu.name AS "Sale_comcercial",
+
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path"
+
+
+FROM sale_order
+LEFT JOIN project_project on project_project.id = sale_order.project_id
+LEFT JOIN res_partner on res_partner.id = sale_order.partner_id
+LEFT JOIN res_company on project_project.company_id = res_company.id
+LEFT JOIN sale_order_line on sale_order_line.order_id = sale_order.id
+LEFT JOIN product_pricelist on product_pricelist.id = sale_order.pricelist_id
+Left JOIN res_currency on res_currency.id = product_pricelist.currency_id
+
+JOIN res_company rc ON rc.id = sale_order.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+JOIN res_users ru
+	ON sale_order.user_id = ru.id
+JOIN res_partner rpu
+	ON ru.partner_id = rpu.id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+--WHERE sale_order.id = 37;
+
+  WHERE $X{IN, sale_order.id, IDS};]]>
+	</queryString>
+	<field name="fecha_caducidad" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_caducidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_caducidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+	</field>
+	<field name="fecha_inicio" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_inicio"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_inicio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+	</field>
+	<field name="delta_tiempo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="delta_tiempo"/>
+		<property name="com.jaspersoft.studio.field.label" value="delta_tiempo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+	</field>
+	<field name="nombre_proyecto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_proyecto"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_proyecto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="project_project"/>
+	</field>
+	<field name="fecha_presup" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_presup"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_presup"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_company"/>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="precio_unit" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="precio_unit"/>
+		<property name="com.jaspersoft.studio.field.label" value="precio_unit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="cantidad" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="subtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="subtotal"/>
+		<property name="com.jaspersoft.studio.field.label" value="subtotal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="moneda"/>
+		<property name="com.jaspersoft.studio.field.label" value="moneda"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_currency"/>
+	</field>
+	<field name="total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total"/>
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="ref_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ref_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="ref_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="observaciones" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="observaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="observaciones"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="Sale_comcercial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Sale_comcercial"/>
+		<property name="com.jaspersoft.studio.field.label" value="Sale_comcercial"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="Company_image" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Company_image"/>
+		<property name="com.jaspersoft.studio.field.label" value="Company_image"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ir_attachment"/>
+	</field>
+	<field name="Filestore_path" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Filestore_path"/>
+		<property name="com.jaspersoft.studio.field.label" value="Filestore_path"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ir_config_parameter"/>
+	</field>
+	<variable name="IDS" class="java.lang.Object"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="110" width="555" height="450"/>
+			</rectangle>
+		</band>
+	</background>
+	<title>
+		<band height="140" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="48"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="90" height="48"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RG-AC-04]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="0" width="370" height="17"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="18" width="370" height="12"/>
+				<textElement textAlignment="Center" lineSpacing="Single"/>
+				<text><![CDATA[CERTIFICACION DE SERVICIOS]]></text>
+			</staticText>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="460" y="0" width="95" height="48"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path}+$F{Company_image}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="60" width="95" height="20" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Cliente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="60" width="70" height="20" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Proveedor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="80" width="70" height="20" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Fecha:]]></text>
+			</staticText>
+			<textField pattern="d/M/yyyy" isBlankWhenNull="true">
+				<reportElement x="404" y="80" width="150" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fecha_presup}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="95" y="60" width="150" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="404" y="60" width="150" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{compania}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="110" width="555" height="30" backcolor="#939393"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="110" width="286" height="30" backcolor="#939393"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="286" y="110" width="74" height="30" backcolor="#939393"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="110" width="96" height="30" backcolor="#939393"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tarifa]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="90" y="30" width="370" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombre_proyecto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="122" width="95" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="460" y="112" width="95" height="12" backcolor="#939393"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="95" height="20" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Orden de compra:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="95" y="80" width="150" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ref_cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="0" width="276" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{precio_unit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="296" y="0" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="460" y="0" width="87" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{subtotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="254" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="20" forecolor="#000000" backcolor="#939393"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="456" height="20" forecolor="#000000" backcolor="#939393"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL + IVA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="37" width="554" height="115"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="37" width="554" height="20" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EVALUACION DEL CLIENTE POR SERVICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="57" width="150" height="20" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[CALIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="77" width="150" height="20" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[TIEMPO DE RESPUESTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="57" width="404" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[1	2	3	4	5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="77" width="404" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[1	2	3	4	5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="97" width="150" height="55" backcolor="#FFFF99"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="220" width="177" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[RESPONSABLE CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="352" y="220" width="177" height="20"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[RESPONSABLE DPISA]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#">
+				<reportElement x="460" y="0" width="87" height="20" forecolor="#000000" backcolor="#939393"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="97" width="385" height="54"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{observaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="197" width="176" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Sale_comcercial}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

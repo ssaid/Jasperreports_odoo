@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 4.0.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="retenciones_dpi" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dpiAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="704"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+account_payment_order.number as "n_constancia",
+account_payment_order.date as "fecha",
+date_period.name as "periodo",
+supplier.name as "proveedor_nombre",
+supplier.street as "proveedor_direccion",
+supplier.city as "proveedor_localidad",
+supplier.zip as "proveedor_cp",
+supplier_state.name as "proveedor_provincia",
+supplier.vat as "proveedor_cuit",
+supplier.vat as "proveedor_ingbrutos",
+
+
+retention_tax_line.id as "detalle_id",
+retention_tax_line.certificate_no as "detalle_n_certificado",
+retention_tax_line.base as "detalle_base",
+retention_tax_line.amount as "detalle_monto",
+retention_tax_line.date as "detalle_fecha",
+retention_tax_line.aliquot as "detalle_alicuota",
+retention_tax_line.amount_text as "detalle_monto_texto",
+retention_retention.name as "retention_name",
+
+
+
+company.name as "compania_nombre",
+company.street as "compania_direccion",
+company.city as "compania_localidad",
+company.zip as "compania_cp",
+company_state.name as "compania_provincia",
+company.vat as "compania_cuit",
+company.vat as "compania_ingbrutos",
+company.phone as "compania_tel"
+
+
+
+FROM account_payment_order
+
+LEFT JOIN res_partner AS "supplier"ON supplier.id = account_payment_order.partner_id 
+LEFT JOIN res_country_state AS "supplier_state"ON supplier_state.id = supplier.state_id 
+LEFT JOIN retention_tax_line ON retention_tax_line.payment_order_id = account_payment_order.id
+LEFT JOIN retention_retention ON retention_retention.id = retention_tax_line.retention_id
+
+LEFT JOIN res_partner AS "company" ON (SELECT partner_id FROM res_company WHERE  id = account_payment_order.company_id) = company.id
+LEFT JOIN res_country_state AS "company_state"ON company_state.id = company.state_id 
+
+LEFT JOIN date_period on date_period.id = account_payment_order.period_id
+
+
+/*WHERE $X{IN, account_payment_order.id, IDS};*/
+
+WHERE account_payment_order.id = 45;]]>
+	</queryString>
+	<field name="n_constancia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="n_constancia"/>
+		<property name="com.jaspersoft.studio.field.label" value="n_constancia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_payment_order"/>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_payment_order"/>
+	</field>
+	<field name="periodo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="periodo"/>
+		<property name="com.jaspersoft.studio.field.label" value="periodo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="date_period"/>
+	</field>
+	<field name="proveedor_nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_direccion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_direccion"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_direccion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_localidad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_localidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_localidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_cp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_cp"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_cp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_provincia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_provincia"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_provincia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_country_state"/>
+	</field>
+	<field name="proveedor_cuit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_cuit"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_cuit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_ingbrutos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="detalle_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_n_certificado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_n_certificado"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_n_certificado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_base" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_base"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_base"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_monto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_monto"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_monto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_fecha"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_alicuota" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_alicuota"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_alicuota"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_monto_texto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_monto_texto"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_monto_texto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="retention_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="retention_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="retention_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_retention"/>
+	</field>
+	<field name="compania_nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_direccion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_direccion"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_direccion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_localidad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_localidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_localidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_cp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_cp"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_cp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_provincia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_provincia"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_provincia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_country_state"/>
+	</field>
+	<field name="compania_cuit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_cuit"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_cuit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_ingbrutos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_tel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_tel"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_tel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<variable name="detalle_monto1" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{detalle_monto}]]></variableExpression>
+	</variable>
+	<variable name="IDS" class="java.lang.Object"/>
+	<group name="retention_group">
+		<groupExpression><![CDATA[$F{detalle_id}]]></groupExpression>
+		<groupHeader>
+			<band height="271">
+				<textField>
+					<reportElement x="80" y="0" width="360" height="31"/>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class=""><![CDATA["CONSTANCIA DE RETENCION - " + $F{retention_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="102"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="23" splitType="Stretch"/>
+	</detail>
+</jasperReport>

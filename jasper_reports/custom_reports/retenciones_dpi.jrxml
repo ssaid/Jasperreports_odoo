@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 4.0.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="retenciones_dpi" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dpiAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="704"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[SELECT 
+account_payment_order.number as "n_constancia",
+account_payment_order.date as "fecha",
+date_period.name as "periodo",
+supplier.name as "proveedor_nombre",
+supplier.street as "proveedor_direccion",
+supplier.city as "proveedor_localidad",
+supplier.zip as "proveedor_cp",
+supplier_state.name as "proveedor_provincia",
+supplier.vat as "proveedor_cuit",
+supplier.vat as "proveedor_ingbrutos",
+
+
+retention_tax_line.id as "detalle_id",
+retention_tax_line.certificate_no as "detalle_n_certificado",
+retention_tax_line.base as "detalle_base",
+retention_tax_line.amount as "detalle_monto",
+retention_tax_line.date as "detalle_fecha",
+retention_tax_line.aliquot as "detalle_alicuota",
+retention_tax_line.amount_text as "detalle_monto_texto",
+retention_retention.name as "retention_name",
+
+
+
+company.name as "compania_nombre",
+company.street as "compania_direccion",
+company.city as "compania_localidad",
+company.zip as "compania_cp",
+company_state.name as "compania_provincia",
+company.vat as "compania_cuit",
+company.vat as "compania_ingbrutos",
+company.phone as "compania_tel"
+
+
+
+FROM account_payment_order
+
+LEFT JOIN res_partner AS "supplier"ON supplier.id = account_payment_order.partner_id 
+LEFT JOIN res_country_state AS "supplier_state"ON supplier_state.id = supplier.state_id 
+LEFT JOIN retention_tax_line ON retention_tax_line.payment_order_id = account_payment_order.id
+LEFT JOIN retention_retention ON retention_retention.id = retention_tax_line.retention_id
+
+LEFT JOIN res_partner AS "company" ON (SELECT partner_id FROM res_company WHERE  id = account_payment_order.company_id) = company.id
+LEFT JOIN res_country_state AS "company_state"ON company_state.id = company.state_id 
+
+LEFT JOIN date_period on date_period.id = account_payment_order.period_id
+
+
+WHERE $X{IN, account_payment_order.id, IDS};]]>
+	</queryString>
+	<field name="n_constancia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="n_constancia"/>
+		<property name="com.jaspersoft.studio.field.label" value="n_constancia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_payment_order"/>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_payment_order"/>
+	</field>
+	<field name="periodo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="periodo"/>
+		<property name="com.jaspersoft.studio.field.label" value="periodo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="date_period"/>
+	</field>
+	<field name="proveedor_nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_direccion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_direccion"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_direccion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_localidad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_localidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_localidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_cp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_cp"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_cp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_provincia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_provincia"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_provincia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_country_state"/>
+	</field>
+	<field name="proveedor_cuit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_cuit"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_cuit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="proveedor_ingbrutos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="proveedor_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.label" value="proveedor_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="detalle_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_n_certificado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_n_certificado"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_n_certificado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_base" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_base"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_base"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_monto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_monto"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_monto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_fecha"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_alicuota" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_alicuota"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_alicuota"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="detalle_monto_texto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="detalle_monto_texto"/>
+		<property name="com.jaspersoft.studio.field.label" value="detalle_monto_texto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_tax_line"/>
+	</field>
+	<field name="retention_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="retention_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="retention_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="retention_retention"/>
+	</field>
+	<field name="compania_nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_direccion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_direccion"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_direccion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_localidad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_localidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_localidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_cp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_cp"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_cp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_provincia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_provincia"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_provincia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_country_state"/>
+	</field>
+	<field name="compania_cuit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_cuit"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_cuit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_ingbrutos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_ingbrutos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="compania_tel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="compania_tel"/>
+		<property name="com.jaspersoft.studio.field.label" value="compania_tel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<variable name="detalle_monto1" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{detalle_monto}]]></variableExpression>
+	</variable>
+	<variable name="IDS" class="java.lang.Object"/>
+	<group name="retention_group" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{detalle_id}]]></groupExpression>
+		<groupHeader>
+			<band height="271">
+				<staticText>
+					<reportElement x="0" y="32" width="210" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[RUBRO I : AGENTE DE RETENCION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="130" width="280" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[RUBRO II : IDENTIFICACION DEL CONTRIBUYENTE RETENIDO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="227" width="294" height="18"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[RUBRO III : DETALLE DE/LOS MONTO/S RETENIDO/S]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="52" width="54" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Agente:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="71" width="65" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Direccion:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="90" width="65" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Localidad:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="109" width="65" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº Agente:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="304" y="52" width="54" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[C.U.I.T.:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="304" y="71" width="65" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Telefono:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="304" y="90" width="65" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Provincia:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="186" y="90" width="34" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[C.P.:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="150" width="210" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Apellidos y Nombre o Denominacion:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="169" width="160" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Domicilio del contribuyente:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="188" width="60" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Localidad:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="304" y="169" width="65" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Provincia:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="304" y="188" width="54" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[C.U.I.T.:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="186" y="188" width="65" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[C.P.:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="207" width="140" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nro. de Ingresos Brutos:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="245" width="145" height="19"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Monto Base Imponible]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="145" y="245" width="140" height="19"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Alicuota]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="425" y="245" width="130" height="19"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha de acreditacion]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="285" y="245" width="140" height="19"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Impuesto Ret./Perc.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="304" y="33" width="116" height="19"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nro. de Constancia:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="210" y="150" width="180" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{proveedor_nombre}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="160" y="169" width="144" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{proveedor_direccion}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="60" y="188" width="126" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{proveedor_localidad}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="220" y="188" width="84" height="18"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{proveedor_cp}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="369" y="169" width="160" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{proveedor_provincia}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="358" y="188" width="152" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{proveedor_cuit}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="140" y="207" width="164" height="18"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{proveedor_ingbrutos}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="54" y="52" width="165" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{compania_nombre}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="65" y="71" width="175" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{compania_direccion}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="65" y="90" width="121" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{compania_localidad}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="220" y="90" width="84" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{compania_cp}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="369" y="90" width="140" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{compania_provincia}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="369" y="71" width="131" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{compania_tel}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="358" y="52" width="172" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{compania_cuit}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="270" width="555" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="100" y="0" width="360" height="31"/>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["CONSTANCIA DE RETENCION - " + $F{retention_name}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="420" y="33" width="130" height="19"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{detalle_n_certificado}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="102">
+				<staticText>
+					<reportElement x="4" y="2" width="96" height="19"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Retenido:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="21" width="76" height="19"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Son Pesos:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="40" width="206" height="19"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[A informarse en la DDJJ del período:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="59" width="76" height="19"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Expedida en:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="78" width="141" height="19"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Comprobante Asociado:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="370" y="78" width="180" height="19"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Firma y aclaracion del Agente]]></text>
+				</staticText>
+				<line>
+					<reportElement x="370" y="78" width="180" height="1"/>
+					<graphicElement>
+						<pen lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<textField pattern="d/M/yyyy" isBlankWhenNull="true">
+					<reportElement x="81" y="59" width="130" height="18"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="555" height="1"/>
+				</line>
+				<textField pattern="MMMM, yyyy" isBlankWhenNull="true">
+					<reportElement x="210" y="40" width="100" height="19"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{periodo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="80" y="21" width="340" height="19"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{detalle_monto_texto}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="140" y="78" width="134" height="19"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{n_constancia}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="100" y="2" width="100" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{detalle_monto}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="145" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{detalle_base}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="285" y="0" width="140" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{detalle_monto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="d/M/yyyy" isBlankWhenNull="true">
+				<reportElement x="425" y="0" width="130" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{detalle_fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="154" y="1" width="120" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{detalle_alicuota} + "%"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

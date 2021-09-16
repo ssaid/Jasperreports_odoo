@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="so" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[SELECT
+rpc.name AS "Company_name",
+rpc.vat AS "Company_cuit",
+COALESCE(rpc.street, '') AS "Company_street",
+COALESCE(rcsc.name, ' ') AS "Company_state",
+COALESCE(rp.city, ' ') AS "Company_city",
+rpc.zip AS "Company_zip",
+rpc.website AS "Company_website",
+rpc.phone AS "Company_phone",
+rpc.email AS "Company_email",
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path",
+
+rp.name AS "Partner_name",
+rp.vat AS "Partner_cuit",
+COALESCE(rp.street, '') AS "Partner_street",
+COALESCE(rcs.name, ' ') AS "Partner_state",
+rp.city AS "Partner_city",
+rp.zip AS "Partner_zip",
+rp.phone AS "Partner_phone",
+afp.name AS "Partner_fiscal_position",
+
+pp.default_code AS "Line_code",
+sol.name AS "Line_description",
+sol.product_uom_qty AS "Line_quantity",
+uom.name AS "Line_uom",
+sol.price_unit AS "Line_price_unit",
+sol.discount AS "Line_discount",
+sol.price_subtotal AS "Line_subtotal",
+
+so.name AS "Sale_number",
+so.note AS "Sale_note",
+so.confirmation_date AS "Sale_date",
+rpu.name AS "Sale_comcercial",
+rpu.email AS "Sale_comercial_email",
+so.amount_untaxed AS "Sale_subtotal",
+so.amount_tax AS "Sale_vat",
+so.amount_total AS "Sale_total"
+
+
+
+FROM sale_order so
+
+JOIN sale_order_line sol
+	ON so.id = sol.order_id
+JOIN product_product pp
+	ON sol.product_id = pp.id
+JOIN uom_uom uom
+	ON sol.product_uom = uom.id
+
+JOIN res_users ru
+	ON so.user_id = ru.id
+JOIN res_partner rpu
+	ON ru.partner_id = rpu.id
+
+JOIN res_partner rp
+	ON so.partner_id = rp.id
+LEFT JOIN res_country_state rcs
+	ON rp.state_id = rcs.id
+LEFT JOIN res_country rcty
+	ON rp.country_id = rcty.id
+LEFT JOIN ir_property ip
+	ON ip.name ~ 'property_account_position'
+    AND ip.res_id=CONCAT('res.partner,',rp.id)
+LEFT JOIN account_fiscal_position afp
+	ON split_part(ip.value_reference, ',', 2)::int=afp.id
+LEFT JOIN res_document_type rdt
+	ON rdt.id = rp.document_type_id
+
+
+JOIN res_company rc
+	ON so.company_id = rc.id
+JOIN res_partner rpc
+	ON rc.partner_id = rpc.id
+LEFT JOIN res_country_state rcsc
+	ON rpc.state_id = rcsc.id
+LEFT JOIN res_country rctyc
+	ON rpc.country_id = rctyc.id
+LEFT JOIN ir_attachment iat
+	ON iat.res_id = rpc.id
+	AND iat.res_model = 'res.partner'
+	AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp
+	ON icp.key = 'filestore.path'
+
+WHERE $X{IN, so.id, IDS}]]>
+	</queryString>
+	<field name="Company_name" class="java.lang.String"/>
+	<field name="Company_cuit" class="java.lang.String"/>
+	<field name="Company_street" class="java.lang.String"/>
+	<field name="Company_state" class="java.lang.String"/>
+	<field name="Company_city" class="java.lang.String"/>
+	<field name="Company_zip" class="java.lang.String"/>
+	<field name="Company_website" class="java.lang.String"/>
+	<field name="Company_phone" class="java.lang.String"/>
+	<field name="Company_email" class="java.lang.String"/>
+	<field name="Company_image" class="java.lang.String"/>
+	<field name="Filestore_path" class="java.lang.String"/>
+	<field name="Partner_name" class="java.lang.String"/>
+	<field name="Partner_cuit" class="java.lang.String"/>
+	<field name="Partner_street" class="java.lang.String"/>
+	<field name="Partner_state" class="java.lang.String"/>
+	<field name="Partner_city" class="java.lang.String"/>
+	<field name="Partner_zip" class="java.lang.String"/>
+	<field name="Partner_phone" class="java.lang.String"/>
+	<field name="Partner_fiscal_position" class="java.lang.String"/>
+	<field name="Line_code" class="java.lang.String"/>
+	<field name="Line_description" class="java.lang.String"/>
+	<field name="Line_quantity" class="java.math.BigDecimal"/>
+	<field name="Line_uom" class="java.lang.String"/>
+	<field name="Line_price_unit" class="java.math.BigDecimal"/>
+	<field name="Line_discount" class="java.math.BigDecimal"/>
+	<field name="Line_subtotal" class="java.math.BigDecimal"/>
+	<field name="Sale_number" class="java.lang.String"/>
+	<field name="Sale_note" class="java.lang.String"/>
+	<field name="Sale_date" class="java.sql.Timestamp"/>
+	<field name="Sale_comcercial" class="java.lang.String"/>
+	<field name="Sale_comercial_email" class="java.lang.String"/>
+	<field name="Sale_subtotal" class="java.math.BigDecimal"/>
+	<field name="Sale_vat" class="java.math.BigDecimal"/>
+	<field name="Sale_total" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="232" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="0" y="0" width="150" height="85"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path} + $F{Company_image}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="150" y="0" width="55" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Localidad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="30" width="55" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Direccion:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="15" width="55" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="45" width="55" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[C.P.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="60" width="55" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUIT:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="0" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Razon Social:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="30" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F Prev. Ent:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="15" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="45" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Responsable:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="60" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="205" y="0" width="156" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="205" y="15" width="156" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="205" y="30" width="156" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_street}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="205" y="45" width="156" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_zip}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="205" y="60" width="156" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_cuit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="0" width="119" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="436" y="15" width="119" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{Sale_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="45" width="119" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Sale_comcercial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="60" width="119" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Sale_comercial_email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="85" width="555" height="56"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["ORDEN DE VENTA  " + $F{Sale_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="141" width="85" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Razon Social:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="156" width="85" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Direccion:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="171" width="85" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Provincia:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="186" width="85" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Localidad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="201" width="85" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N. Presupuesto:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="216" width="85" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cond Compra:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="141" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N. Fantasía:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="156" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="171" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[C. Postal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="186" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUIT:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="201" width="75" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condición IVA:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="141" width="285" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="156" width="285" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_street}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="171" width="285" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_state}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="186" width="285" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="156" width="111" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="171" width="111" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_zip}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="186" width="111" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_cuit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="445" y="201" width="111" height="15"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_fiscal_position}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="60" height="15" backcolor="#E8ECEF"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="255" y="0" width="50" height="15" backcolor="#E8ECEF"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="305" y="0" width="60" height="15" backcolor="#E8ECEF"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="365" y="0" width="70" height="15" backcolor="#E8ECEF"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[P. Unitario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="435" y="0" width="50" height="15" backcolor="#E8ECEF"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[% Bonif.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="485" y="0" width="70" height="15" backcolor="#E8ECEF"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[P. Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="60" y="0" width="195" height="15" backcolor="#E8ECEF"/>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="60" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Line_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="60" y="0" width="195" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Line_description}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="255" y="0" width="50" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Line_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="305" y="0" width="60" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Line_uom}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="365" y="0" width="71" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Line_price_unit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
+				<reportElement x="436" y="0" width="50" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Line_discount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="486" y="0" width="70" height="15" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Line_subtotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21">
+			<textField>
+				<reportElement x="425" y="0" width="114" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Page">
+				<reportElement x="534" y="1" width="20" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="90">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="15" width="555" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Sale_note}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="51" width="555" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single"/>
+				<text><![CDATA[- INCLUIR EN LA FACTURA NUMERO DE ESTA ORDEN DE VENTA -]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="425" y="70" width="114" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Page">
+				<reportElement x="534" y="70" width="20" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="74" splitType="Stretch">
+			<staticText>
+				<reportElement x="361" y="14" width="75" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="436" y="14" width="120" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Sale_subtotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="361" y="34" width="75" height="20"/>
+				<box>
+					<topPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement lineSpacing="Single">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="436" y="34" width="119" height="20"/>
+				<box>
+					<topPen lineWidth="0.75" lineColor="#E8ECEF"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Sale_vat}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="361" y="54" width="75" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="436" y="54" width="120" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Sale_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="archivo_adjuntos" language="groovy" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="af761ca0-3faa-4b02-bdfe-8a0d707bc5ca">
+	<property name="ireport.zoom" value="1.1"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[select ia.name as attachment FROM project_project pj
+	LEFT JOIN ir_attachment ia
+	ON ia.res_id = pj.id	
+--WHERE pj.id IN (7477) and ia.res_model='project.project';
+WHERE pj.id IN ($P{IDS}) and res_model='project.project';]]>
+	</queryString>
+	<field name="attachment" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="14">
+			<printWhenExpression><![CDATA[$F{attachment}.isEmpty().toString()=="false"]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="0" width="159" height="14" uuid="42736085-7fab-4899-9a13-c9337a03ad19"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true" isItalic="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Anexos y Documentación Extra:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16">
+			<printWhenExpression><![CDATA[$F{attachment}.isEmpty().toString()=="false"]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="10" y="0" width="562" height="14" uuid="40d7a394-c051-415a-89a6-2abc656c5123"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{attachment}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

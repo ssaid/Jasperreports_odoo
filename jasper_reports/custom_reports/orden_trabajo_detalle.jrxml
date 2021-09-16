@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orden_trabajo_detalle" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="OPENERP_RELATIONS" value="[&apos;task_ids&apos;]"/>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="Horas_planificadas-hours" class="java.lang.Float">
+		<fieldDescription><![CDATA[/data/record/Actividades-task_ids/Horas_planificadas-hours]]></fieldDescription>
+	</field>
+	<field name="Nombre-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Actividades-task_ids/Nombre-name]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[/data/record/Actividades-task_ids/sequence]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="15">
+			<staticText>
+				<reportElement x="41" y="0" width="429" height="14"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[DESCRIPCIÓN DEL TRABAJO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="470" y="0" width="85" height="14"/>
+				<textElement/>
+				<text><![CDATA[Hs. Planificadas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="41" height="14"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="470" y="0" width="85" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Float"><![CDATA[$F{Horas_planificadas-hours}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="41" y="0" width="429" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Nombre-name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement x="0" y="0" width="41" height="14">
+					<printWhenExpression><![CDATA[($F{id}!=null?$F{id}:0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

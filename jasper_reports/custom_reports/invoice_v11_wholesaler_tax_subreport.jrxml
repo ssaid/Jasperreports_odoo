@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 4.0.0-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_v11_wholesaler_tax_subreport" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row_style" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" forecolor="#000000" backcolor="#DFDBDB" hAlign="Center" vAlign="Middle" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 1]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#F1F9FF" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="IDS" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT  ait.invoice_id AS "Invoice",
+        at.name AS "Tax",
+        rcurr.name AS "Tax_currency",
+        SUM(ait.amount) AS "Tax_amount"
+
+FROM account_invoice ai
+JOIN account_invoice_tax ait
+	ON ait.invoice_id = ai.id
+JOIN account_tax at
+	ON at.id = ait.tax_id
+JOIN res_currency rcurr
+	ON rcurr.id = ait.currency_id
+
+WHERE ai.id IN ($P{IDS})
+
+
+GROUP BY ait.invoice_id, at.name, rcurr.name]]>
+	</queryString>
+	<field name="Invoice" class="java.lang.Integer"/>
+	<field name="Tax" class="java.lang.String"/>
+	<field name="Tax_currency" class="java.lang.String"/>
+	<field name="Tax_amount" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="0" width="168" height="12"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Tax}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="168" y="0" width="29" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Tax_currency}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="197" y="0" width="81" height="12"/>
+				<box rightPadding="1"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Tax_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="1">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="300" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

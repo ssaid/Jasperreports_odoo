@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dpi_remito_membretado" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[SELECT
+sp.street AS calle,
+sp.zip AS codigo_postal,
+sp.city AS cuidad,
+sp.package AS bultos,
+sp.transport AS transporte,
+sp.insurance_by AS asegurado,
+sp.declared_value AS valor_declarado,
+afp.name AS posicion_fiscal,
+sp.vat AS cuit,
+date(sp.scheduled_date) AS fecha,
+sp.notes AS seniores,
+rcs.name AS provincia,
+sm.product_uom_qty AS cantidad,
+pt.name AS descripcion,
+sp.phone AS telefono
+
+
+FROM stock_picking sp
+
+LEFT JOIN res_country_state rcs
+
+ON rcs.id = sp.res_contry_state_id
+
+LEFT JOIN stock_move sm
+
+ON sm.picking_id = sp.id
+
+LEFT JOIN account_fiscal_position afp
+ON afp.id = sp.fiscal_position_id
+
+JOIN product_product AS pp
+ON sm.product_id = pp.id
+
+JOIN product_template AS pt
+ON pp.product_tmpl_id = pt.id
+
+WHERE $X{IN, sp.id, IDS}]]>
+	</queryString>
+	<field name="calle" class="java.lang.String"/>
+	<field name="codigo_postal" class="java.lang.String"/>
+	<field name="cuidad" class="java.lang.String"/>
+	<field name="bultos" class="java.lang.Integer"/>
+	<field name="transporte" class="java.lang.String"/>
+	<field name="asegurado" class="java.lang.String"/>
+	<field name="valor_declarado" class="java.lang.Double"/>
+	<field name="posicion_fiscal" class="java.lang.String"/>
+	<field name="cuit" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Date"/>
+	<field name="seniores" class="java.lang.String"/>
+	<field name="provincia" class="java.lang.String"/>
+	<field name="cantidad" class="java.math.BigDecimal"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="274" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="404" y="61" width="100" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="115" y="184" width="309" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{seniores}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="477" y="184" width="76" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="224" width="109" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cuidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="205" width="202" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{calle}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="330" y="224" width="61" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{codigo_postal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="224" y="224" width="82" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{provincia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="306" y="225" width="24" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[CP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="447" y="184" width="30" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[TEL]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="447" y="205" width="106" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{posicion_fiscal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="447" y="225" width="106" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cuit}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="91" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="102" y="0" width="453" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="90" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="290" y="0" width="214" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{bultos}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="290" y="20" width="214" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{transporte}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="290" y="40" width="214" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{asegurado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="290" y="60" width="214" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{valor_declarado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="105" y="0" width="161" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[CANTIDAD DE BULTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="20" width="161" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[TRANSPORTADO POR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="40" width="161" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[SEGURO A CARGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="60" width="161" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR DECLARADO]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

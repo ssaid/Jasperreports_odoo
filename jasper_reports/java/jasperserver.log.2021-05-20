@@ -1,0 +1,743 @@
+1    [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: java.lang.ClassNotFoundException: 
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+1851463 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: Error preparing statement for executing the report query:
+
+SELECT 
+
+
+project_project.date as "fecha_caducidad",
+project_project.date_start as "fecha_inicio",
+project_project.period_days as "delta_tiempo",
+sale_order.validity_date as "fecha_presup",
+res_partner.name as "cliente",
+res_company.name as "compania",
+
+sale_order_line.name as "descripcion",
+sale_order_line.price_unit as "precio_unit",
+sale_order_line.product_uom_qty as "cantidad",
+sale_order_line.price_subtotal as "subtotal",
+
+
+sale_order.amount_total as "total",
+sale_order.note as "observaciones",
+
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path"
+
+
+FROM sale_order
+LEFT JOIN project_project on project_project.id = sale_order.project_id
+LEFT JOIN res_partner on res_partner.id = sale_order.partner_id
+LEFT JOIN res_company on project_project.company_id = res_company.id
+LEFT JOIN sale_order_line on sale_order_line.order_id = sale_order.id
+
+JOIN res_company rc ON rc.id = sale_order.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+WHERE sale_order.id = 37;
+
+ -- WHERE sale_order.id IN (?);
+
+
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+SELECT 
+
+
+project_project.date as "fecha_caducidad",
+project_project.date_start as "fecha_inicio",
+project_project.period_days as "delta_tiempo",
+sale_order.validity_date as "fecha_presup",
+res_partner.name as "cliente",
+res_company.name as "compania",
+
+sale_order_line.name as "descripcion",
+sale_order_line.price_unit as "precio_unit",
+sale_order_line.product_uom_qty as "cantidad",
+sale_order_line.price_subtotal as "subtotal",
+
+
+sale_order.amount_total as "total",
+sale_order.note as "observaciones",
+
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path"
+
+
+FROM sale_order
+LEFT JOIN project_project on project_project.id = sale_order.project_id
+LEFT JOIN res_partner on res_partner.id = sale_order.partner_id
+LEFT JOIN res_company on project_project.company_id = res_company.id
+LEFT JOIN sale_order_line on sale_order_line.order_id = sale_order.id
+
+JOIN res_company rc ON rc.id = sale_order.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+WHERE sale_order.id = 37;
+
+ -- WHERE sale_order.id IN (?);
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.CompositeParameterList.findSubParam(CompositeParameterList.java:33)
+	at org.postgresql.core.v3.CompositeParameterList.setBinaryParameter(CompositeParameterList.java:91)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+Caused by:
+net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+SELECT 
+
+
+project_project.date as "fecha_caducidad",
+project_project.date_start as "fecha_inicio",
+project_project.period_days as "delta_tiempo",
+sale_order.validity_date as "fecha_presup",
+res_partner.name as "cliente",
+res_company.name as "compania",
+
+sale_order_line.name as "descripcion",
+sale_order_line.price_unit as "precio_unit",
+sale_order_line.product_uom_qty as "cantidad",
+sale_order_line.price_subtotal as "subtotal",
+
+
+sale_order.amount_total as "total",
+sale_order.note as "observaciones",
+
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path"
+
+
+FROM sale_order
+LEFT JOIN project_project on project_project.id = sale_order.project_id
+LEFT JOIN res_partner on res_partner.id = sale_order.partner_id
+LEFT JOIN res_company on project_project.company_id = res_company.id
+LEFT JOIN sale_order_line on sale_order_line.order_id = sale_order.id
+
+JOIN res_company rc ON rc.id = sale_order.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+WHERE sale_order.id = 37;
+
+ -- WHERE sale_order.id IN (?);
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.CompositeParameterList.findSubParam(CompositeParameterList.java:33)
+	at org.postgresql.core.v3.CompositeParameterList.setBinaryParameter(CompositeParameterList.java:91)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+1    [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: Error preparing statement for executing the report query:
+
+SELECT 
+
+
+project_project.date as "fecha_caducidad",
+project_project.date_start as "fecha_inicio",
+project_project.period_days as "delta_tiempo",
+sale_order.validity_date as "fecha_presup",
+res_partner.name as "cliente",
+res_company.name as "compania",
+
+sale_order_line.name as "descripcion",
+sale_order_line.price_unit as "precio_unit",
+sale_order_line.product_uom_qty as "cantidad",
+sale_order_line.price_subtotal as "subtotal",
+
+
+sale_order.amount_total as "total",
+sale_order.note as "observaciones",
+
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path"
+
+
+FROM sale_order
+LEFT JOIN project_project on project_project.id = sale_order.project_id
+LEFT JOIN res_partner on res_partner.id = sale_order.partner_id
+LEFT JOIN res_company on project_project.company_id = res_company.id
+LEFT JOIN sale_order_line on sale_order_line.order_id = sale_order.id
+
+JOIN res_company rc ON rc.id = sale_order.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+WHERE sale_order.id = 37;
+
+ -- WHERE sale_order.id IN (?);
+
+
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+SELECT 
+
+
+project_project.date as "fecha_caducidad",
+project_project.date_start as "fecha_inicio",
+project_project.period_days as "delta_tiempo",
+sale_order.validity_date as "fecha_presup",
+res_partner.name as "cliente",
+res_company.name as "compania",
+
+sale_order_line.name as "descripcion",
+sale_order_line.price_unit as "precio_unit",
+sale_order_line.product_uom_qty as "cantidad",
+sale_order_line.price_subtotal as "subtotal",
+
+
+sale_order.amount_total as "total",
+sale_order.note as "observaciones",
+
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path"
+
+
+FROM sale_order
+LEFT JOIN project_project on project_project.id = sale_order.project_id
+LEFT JOIN res_partner on res_partner.id = sale_order.partner_id
+LEFT JOIN res_company on project_project.company_id = res_company.id
+LEFT JOIN sale_order_line on sale_order_line.order_id = sale_order.id
+
+JOIN res_company rc ON rc.id = sale_order.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+WHERE sale_order.id = 37;
+
+ -- WHERE sale_order.id IN (?);
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.CompositeParameterList.findSubParam(CompositeParameterList.java:33)
+	at org.postgresql.core.v3.CompositeParameterList.setBinaryParameter(CompositeParameterList.java:91)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+Caused by:
+net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+SELECT 
+
+
+project_project.date as "fecha_caducidad",
+project_project.date_start as "fecha_inicio",
+project_project.period_days as "delta_tiempo",
+sale_order.validity_date as "fecha_presup",
+res_partner.name as "cliente",
+res_company.name as "compania",
+
+sale_order_line.name as "descripcion",
+sale_order_line.price_unit as "precio_unit",
+sale_order_line.product_uom_qty as "cantidad",
+sale_order_line.price_subtotal as "subtotal",
+
+
+sale_order.amount_total as "total",
+sale_order.note as "observaciones",
+
+iat.store_fname AS "Company_image",
+icp.value AS "Filestore_path"
+
+
+FROM sale_order
+LEFT JOIN project_project on project_project.id = sale_order.project_id
+LEFT JOIN res_partner on res_partner.id = sale_order.partner_id
+LEFT JOIN res_company on project_project.company_id = res_company.id
+LEFT JOIN sale_order_line on sale_order_line.order_id = sale_order.id
+
+JOIN res_company rc ON rc.id = sale_order.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+WHERE sale_order.id = 37;
+
+ -- WHERE sale_order.id IN (?);
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.CompositeParameterList.findSubParam(CompositeParameterList.java:33)
+	at org.postgresql.core.v3.CompositeParameterList.setBinaryParameter(CompositeParameterList.java:91)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+64814 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: java.lang.ClassNotFoundException: 
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+266641 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: Error executing SQL statement for: certificado_servicios.
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRException: Error executing SQL statement for: certificado_servicios.
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:347)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: org.postgresql.util.PSQLException: ERROR: column project_project.period_days does not exist
+  Position: 100
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2433)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2178)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:306)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:441)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:365)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:155)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:118)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:310)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRException: Error executing SQL statement for: certificado_servicios.
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:347)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: org.postgresql.util.PSQLException: ERROR: column project_project.period_days does not exist
+  Position: 100
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2433)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2178)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:306)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:441)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:365)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:155)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:118)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:310)
+	... 21 more
+1    [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: java.lang.ClassNotFoundException: 
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+0    [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: java.lang.ClassNotFoundException: 
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more

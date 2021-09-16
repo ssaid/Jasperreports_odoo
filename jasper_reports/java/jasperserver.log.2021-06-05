@@ -1,0 +1,2 @@
+0    [XML-RPC-0] ERROR org.apache.xmlrpc.webserver.WebServer - org.apache.xmlrpc.webserver.Connection$BadRequestException: PUT
+9320 [XML-RPC-1] ERROR org.apache.xmlrpc.webserver.WebServer - org.apache.xmlrpc.webserver.Connection$BadRequestException: DELETE

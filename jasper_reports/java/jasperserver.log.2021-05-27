@@ -1,0 +1,1360 @@
+1    [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: Error executing SQL statement for: payment_receipt_order_v11.
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRException: Error executing SQL statement for: payment_receipt_order_v11.
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:347)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: org.postgresql.util.PSQLException: ERROR: column apo.amount_text does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2433)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2178)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:306)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:441)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:365)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:155)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:118)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:310)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRException: Error executing SQL statement for: payment_receipt_order_v11.
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:347)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: org.postgresql.util.PSQLException: ERROR: column apo.amount_text does not exist
+  Position: 60
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2433)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2178)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:306)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:441)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:365)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:155)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:118)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:310)
+	... 21 more
+0    [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: Error preparing statement for executing the report query:
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE 
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.tax_amount as "percepcion_monto",
+perception_tax_line.perception_id as "percepcion_codeid",
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+/*WHERE account_invoice.id IN (?)*/
+where account_invoice.id = 61
+;
+
+
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE 
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.tax_amount as "percepcion_monto",
+perception_tax_line.perception_id as "percepcion_codeid",
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+/*WHERE account_invoice.id IN (?)*/
+where account_invoice.id = 61
+;
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.SimpleParameterList.bind(SimpleParameterList.java:65)
+	at org.postgresql.core.v3.SimpleParameterList.setBinaryParameter(SimpleParameterList.java:132)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+Caused by:
+net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE 
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.tax_amount as "percepcion_monto",
+perception_tax_line.perception_id as "percepcion_codeid",
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+/*WHERE account_invoice.id IN (?)*/
+where account_invoice.id = 61
+;
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.SimpleParameterList.bind(SimpleParameterList.java:65)
+	at org.postgresql.core.v3.SimpleParameterList.setBinaryParameter(SimpleParameterList.java:132)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+89167 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: Error preparing statement for executing the report query:
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE 
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.tax_amount as "percepcion_monto",
+perception_tax_line.perception_id as "percepcion_codeid",
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+/*WHERE account_invoice.id IN (?)*/
+where account_invoice.id = 61
+;
+
+
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE 
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.tax_amount as "percepcion_monto",
+perception_tax_line.perception_id as "percepcion_codeid",
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+/*WHERE account_invoice.id IN (?)*/
+where account_invoice.id = 61
+;
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.SimpleParameterList.bind(SimpleParameterList.java:65)
+	at org.postgresql.core.v3.SimpleParameterList.setBinaryParameter(SimpleParameterList.java:132)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+Caused by:
+net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE 
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.tax_amount as "percepcion_monto",
+perception_tax_line.perception_id as "percepcion_codeid",
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+/*WHERE account_invoice.id IN (?)*/
+where account_invoice.id = 61
+;
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.SimpleParameterList.bind(SimpleParameterList.java:65)
+	at org.postgresql.core.v3.SimpleParameterList.setBinaryParameter(SimpleParameterList.java:132)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+210870 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: java.lang.ClassNotFoundException: 
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+499229 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: java.lang.ClassNotFoundException: 
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+1663359 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: java.lang.ClassNotFoundException: 
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+Caused by:
+net.sf.jasperreports.engine.JRRuntimeException: java.lang.ClassNotFoundException: 
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:172)
+	at com.nantic.jasperreports.I18nGroovyCompiler.generateSourceCode(I18nGroovyCompiler.java:184)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.createCompileUnit(JRAbstractCompiler.java:289)
+	at net.sf.jasperreports.engine.design.JRAbstractCompiler.compileReport(JRAbstractCompiler.java:179)
+	at net.sf.jasperreports.engine.JasperCompileManager.compile(JasperCompileManager.java:357)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:273)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileToFile(JasperCompileManager.java:255)
+	at net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(JasperCompileManager.java:554)
+	at com.nantic.jasperreports.JasperServer.compile(JasperServer.java:107)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:146)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: java.lang.ClassNotFoundException: 
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:398)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForRealName(JRClassLoader.java:174)
+	at net.sf.jasperreports.engine.util.JRClassLoader.loadClassForName(JRClassLoader.java:114)
+	at net.sf.jasperreports.engine.base.JRBaseExpression.getValueClass(JRBaseExpression.java:168)
+	... 21 more
+4375027 [XML-RPC-0] ERROR org.apache.xmlrpc.server.XmlRpcStreamServer - execute: Error while performing request
+org.apache.xmlrpc.common.XmlRpcInvocationException: Failed to invoke method execute in class com.nantic.jasperreports.JasperServer: Error preparing statement for executing the report query:
+
+WITH totals AS (
+SELECT
+ai.id as invoice_id,
+SUM (ait.amount)as sum_amount
+
+FROM account_invoice ai
+JOIN account_invoice_tax ait
+	ON ai.id = ait.invoice_id
+JOIN account_tax at
+	ON ait.tax_id = at.id
+
+WHERE at.tax_group = 'vat'
+
+GROUP BY ai.id
+)
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.name as "moneda_nombre",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.amount as "percepcion_monto",
+perception_perception.code as "percepcion_code",
+ROUND(account_invoice.currency_rate, 4) AS "invoice_currency_rate",
+ROUND(totals.sum_amount * account_invoice.currency_rate, 2) as "vat_total",
+account_invoice.amount_tax_cur_text as "iva_usd",
+
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join totals on totals.invoice_id = account_invoice.id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join perception_perception on perception_tax_line.perception_id=perception_perception.id
+
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+--WHERE account_invoice.id IN (?)
+where account_invoice.id = 124
+;
+
+
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:126)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+WITH totals AS (
+SELECT
+ai.id as invoice_id,
+SUM (ait.amount)as sum_amount
+
+FROM account_invoice ai
+JOIN account_invoice_tax ait
+	ON ai.id = ait.invoice_id
+JOIN account_tax at
+	ON ait.tax_id = at.id
+
+WHERE at.tax_group = 'vat'
+
+GROUP BY ai.id
+)
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.name as "moneda_nombre",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.amount as "percepcion_monto",
+perception_perception.code as "percepcion_code",
+ROUND(account_invoice.currency_rate, 4) AS "invoice_currency_rate",
+ROUND(totals.sum_amount * account_invoice.currency_rate, 2) as "vat_total",
+account_invoice.amount_tax_cur_text as "iva_usd",
+
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join totals on totals.invoice_id = account_invoice.id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join perception_perception on perception_tax_line.perception_id=perception_perception.id
+
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+--WHERE account_invoice.id IN (?)
+where account_invoice.id = 124
+;
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	... 6 more
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.SimpleParameterList.bind(SimpleParameterList.java:65)
+	at org.postgresql.core.v3.SimpleParameterList.setBinaryParameter(SimpleParameterList.java:132)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
+Caused by:
+net.sf.jasperreports.engine.JRException: Error preparing statement for executing the report query:
+
+WITH totals AS (
+SELECT
+ai.id as invoice_id,
+SUM (ait.amount)as sum_amount
+
+FROM account_invoice ai
+JOIN account_invoice_tax ait
+	ON ai.id = ait.invoice_id
+JOIN account_tax at
+	ON ait.tax_id = at.id
+
+WHERE at.tax_group = 'vat'
+
+GROUP BY ai.id
+)
+
+select
+
+/*Datos compania*/
+
+res_company.name as "company_name",
+res_company.email as "company_email",
+res_company.phone as "company_phone",
+pc.vat as "company_cuit",
+pc.website as "company_website",
+pc.street as "company_street",
+
+
+/*Datos cliente*/
+res_partner.name as "nombre_cliente",
+res_partner.street as "direccion_cliente",
+res_partner.vat as "cuit_cliente",
+res_partner.id as "id_cliente",
+account_payment_term.name as "condicion_venta",
+res_partner.phone as "tel_cliente",
+CASE
+	WHEN (account_fiscal_position.name = 'RI' )
+    	 THEN 'RESPONSALE INSCRIPTO'
+     WHEN (account_fiscal_position.name = 'RIM' )
+     	THEN 'RESPONSALE INSCRIPTO "M"'
+     ELSE
+     	account_fiscal_position.name
+ END  "cond_iva",
+
+
+/*Descripcion factura*/
+account_invoice_line.price_unit as "producto_p_unit",
+account_invoice_line.quantity as "producto_cant",
+account_invoice_line.name as "producto_descripcion",
+res_currency.name as "moneda_nombre",
+res_currency.symbol as "moneda",
+
+/*Datos factura general*/
+account_invoice.date_invoice,
+account_invoice.id as "Invoice_id",
+account_invoice.date_due as "vencimiento_factura",
+account_invoice.internal_number as "n_factura",
+account_invoice.amount_untaxed as "total_sin_impuestos" ,
+account_invoice.amount_total as "total_factura",
+account_invoice.amount_tax as "impuesto_factura",
+invoice_denomination.name as "denominacion_factura",
+account_invoice.cae as "cae_factura",
+wsfe_voucher_type.name as "tipo_factura",
+perception_tax_line.name as "percepcion_name",
+perception_tax_line.amount as "percepcion_monto",
+perception_perception.code as "percepcion_code",
+ROUND(account_invoice.currency_rate, 4) AS "invoice_currency_rate",
+ROUND(totals.sum_amount * account_invoice.currency_rate, 2) as "vat_total",
+account_invoice.amount_tax_cur_text as "iva_usd",
+
+
+/*imagen */
+iat.store_fname AS "Company_image",
+qr.value as "qr_path",
+icp.value AS "Filestore_path"
+
+
+
+/*JOINS*/
+from account_invoice
+left join res_company on res_company.id=account_invoice.company_id
+left join res_partner as pc on pc.id=res_company.partner_id
+left join res_partner on res_partner.id=account_invoice.partner_id
+left join account_payment_term on account_payment_term.id = account_invoice.payment_term_id
+left join account_invoice_line on account_invoice_line.invoice_id=account_invoice.id
+left join account_fiscal_position on account_fiscal_position.id=account_invoice.fiscal_position_id
+left join invoice_denomination on invoice_denomination.id=account_invoice.denomination_id
+left join wsfe_voucher_type on wsfe_voucher_type.id= account_invoice.voucher_type_id
+left join totals on totals.invoice_id = account_invoice.id
+left join perception_tax_line on perception_tax_line.invoice_id=account_invoice.id
+left join perception_perception on perception_tax_line.perception_id=perception_perception.id
+
+left join res_currency on account_invoice_line.currency_id=res_currency.id
+
+
+
+JOIN res_company rc ON rc.id = account_invoice.company_id
+JOIN res_partner rpc ON rpc.id = rc.partner_id
+
+LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+LEFT JOIN ir_config_parameter qr ON qr.key = 'jasper_path_for_qr'
+
+
+--WHERE account_invoice.id IN (?)
+where account_invoice.id = 124
+;
+
+
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:524)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createDatasource(JRJdbcQueryExecuter.java:297)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.createQueryDatasource(JRFillDataset.java:1245)
+	at net.sf.jasperreports.engine.fill.JRFillDataset.initDatasource(JRFillDataset.java:723)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.setParameters(BaseReportFiller.java:429)
+	at net.sf.jasperreports.engine.fill.JRBaseFiller.fill(JRBaseFiller.java:572)
+	at net.sf.jasperreports.engine.fill.BaseReportFiller.fill(BaseReportFiller.java:387)
+	at net.sf.jasperreports.engine.fill.JRFiller.fill(JRFiller.java:109)
+	at net.sf.jasperreports.engine.JasperFillManager.fill(JasperFillManager.java:456)
+	at net.sf.jasperreports.engine.JasperFillManager.fillReport(JasperFillManager.java:863)
+	at com.nantic.jasperreports.JasperServer.privateExecute(JasperServer.java:231)
+	at com.nantic.jasperreports.JasperServer.execute(JasperServer.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.invoke(ReflectiveXmlRpcHandler.java:112)
+	at org.apache.xmlrpc.server.ReflectiveXmlRpcHandler.execute(ReflectiveXmlRpcHandler.java:103)
+	at org.apache.xmlrpc.server.XmlRpcServerWorker.execute(XmlRpcServerWorker.java:43)
+	at org.apache.xmlrpc.server.XmlRpcServer.execute(XmlRpcServer.java:83)
+	at org.apache.xmlrpc.server.XmlRpcStreamServer.execute(XmlRpcStreamServer.java:191)
+	at org.apache.xmlrpc.webserver.Connection.run(Connection.java:205)
+	at org.apache.xmlrpc.util.ThreadPool$Poolable$1.run(ThreadPool.java:68)
+Caused by: org.postgresql.util.PSQLException: The column index is out of range: 1, number of columns: 0.
+	at org.postgresql.core.v3.SimpleParameterList.bind(SimpleParameterList.java:65)
+	at org.postgresql.core.v3.SimpleParameterList.setBinaryParameter(SimpleParameterList.java:132)
+	at org.postgresql.jdbc.PgPreparedStatement.bindBytes(PgPreparedStatement.java:1007)
+	at org.postgresql.jdbc.PgPreparedStatement.setInt(PgPreparedStatement.java:283)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementParameter(JRJdbcQueryExecuter.java:699)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameter(JRJdbcQueryExecuter.java:640)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.setStatementMultiParameters(JRJdbcQueryExecuter.java:590)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter$1.visit(JRJdbcQueryExecuter.java:476)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter$QueryParameter.accept(JRAbstractQueryExecuter.java:163)
+	at net.sf.jasperreports.engine.query.JRAbstractQueryExecuter.visitQueryParameters(JRAbstractQueryExecuter.java:666)
+	at net.sf.jasperreports.engine.query.JRJdbcQueryExecuter.createStatement(JRJdbcQueryExecuter.java:465)
+	... 22 more
