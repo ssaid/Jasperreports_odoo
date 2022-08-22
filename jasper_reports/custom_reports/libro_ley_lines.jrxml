@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="libro_ley_lines" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2d5dfe3e-a76e-4bfc-8625-a6b23d77fc22">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Odoo-Raf.RRHH.100"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ID" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+ps.id AS "Payslip_id",
+emp.id AS "Employee_id",
+ps.date_to AS "Payslip_date",
+TRIM(sr.code) || ' ' ||  TRIM(sr.name) AS "Line_salary_rule",
+ABS(psl.quantity_print) AS "Line_quantity",
+ABS(psl.amount) AS "Line_amount",
+ABS(psl.total) AS "Line_total",
+CASE
+	WHEN src.code LIKE 'REM' THEN 1
+	WHEN src.code LIKE 'NR' THEN 2
+	ELSE 3
+END AS category
+
+FROM hr_payslip ps
+JOIN hr_payslip_line psl
+	ON psl.slip_id = ps.id
+JOIN hr_salary_rule sr
+	ON sr.id = psl.salary_rule_id
+JOIN hr_salary_rule_category src
+	ON src.id = sr.category_id
+JOIN hr_contract ctr
+    ON ctr.id = ps.contract_id
+JOIN hr_employee emp
+    ON emp.id = ps.employee_id
+
+WHERE
+	ps.id IN ($P{ID})
+	AND psl.amount != 0
+	AND src.code IN ('REM', 'NR','RET')
+
+ORDER BY ps.date_to, emp.name, category, sr.code]]>
+	</queryString>
+	<field name="Payslip_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Payslip_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="Payslip_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hr_payslip"/>
+	</field>
+	<field name="Employee_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Employee_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="Employee_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hr_employee"/>
+	</field>
+	<field name="Payslip_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="Payslip_date"/>
+		<property name="com.jaspersoft.studio.field.label" value="Payslip_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="hr_payslip"/>
+	</field>
+	<field name="Line_salary_rule" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Line_salary_rule"/>
+		<property name="com.jaspersoft.studio.field.label" value="Line_salary_rule"/>
+	</field>
+	<field name="Line_quantity" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="Line_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="Line_quantity"/>
+	</field>
+	<field name="Line_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Line_amount"/>
+		<property name="com.jaspersoft.studio.field.label" value="Line_amount"/>
+	</field>
+	<field name="Line_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="Line_total"/>
+		<property name="com.jaspersoft.studio.field.label" value="Line_total"/>
+	</field>
+	<field name="category" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="category"/>
+		<property name="com.jaspersoft.studio.field.label" value="category"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="2"/>
+	</columnHeader>
+	<detail>
+		<band height="8" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="218" y="0" width="70" height="8" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="b00bb6ef-0079-403b-9a36-16965a2148dd">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{category} == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Line_total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="180" y="0" width="40" height="8" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="cdbc7843-52f0-45f0-9304-9b90295d2d65">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Line_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="183" height="8" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="4ff8bffb-d36b-4bea-a90e-b80cdaab13fd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="4"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Line_salary_rule}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="348" y="0" width="70" height="8" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="95714d83-9d09-4b08-b0b9-1c0acf2cf256">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{category} == 2]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Line_total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="427" y="0" width="70" height="8" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="26e3250d-fb5d-4881-843e-3d944f045758">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{category} == 3]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Line_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
