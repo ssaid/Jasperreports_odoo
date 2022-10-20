@@ -11,7 +11,7 @@ SELECT
 	employee_id,
 	MIN(date_start) AS date_start
 FROM hr_contract
-WHERE state != 'draft' AND active IS True
+WHERE state != 'draft'
 GROUP BY employee_id
 ),
 header_salary AS (
@@ -28,16 +28,6 @@ JOIN hr_contract ctr
 JOIN hr_payroll_structure str
 	ON ctr.struct_id = str.id
 WHERE salary_rule_id IN (285)
-),
-lic_qty AS (
-SELECT
-    psl.slip_id AS payslip_id,
-    SUM(psl.total) FILTER (WHERE sr.code LIKE 'leave_lic_days') AS leave_lic_days,
-    SUM(psl.total) FILTER (WHERE sr.code LIKE 'leave_hol_days') AS leave_hol_days
-FROM hr_payslip_line psl
-JOIN hr_salary_rule sr
-	ON sr.id = psl.salary_rule_id
-GROUP BY psl.slip_id
 )
 
 SELECT rc.name AS "Company_name",
@@ -47,14 +37,7 @@ SELECT rc.name AS "Company_name",
  rpc.vat AS cuit,
  hr_payslip_line.code,
  hr_payslip_line.name AS "payslip_line_concept",
- CASE
- 	WHEN hr_payslip_line.code IN ('H0040') THEN lic_qty.leave_lic_days * 8
-	WHEN hr_payslip_line.code IN ('H0140') THEN lic_qty.leave_lic_days
-	WHEN hr_payslip_line.code IN ('H0065') AND aaa.code IN ('1038') THEN lic_qty.leave_hol_days * 9
-	WHEN hr_payslip_line.code IN ('H0065') THEN lic_qty.leave_lic_days * 8
-	WHEN hr_payslip_line.code IN ('H0165') THEN lic_qty.leave_lic_days
-	ELSE hr_payslip_line.quantity_print
- END AS "quantity",
+ hr_payslip_line.quantity_print AS "quantity",
  CASE WHEN (hr_salary_rule_category.name = 'Remunerativo' )
      THEN (hr_payslip_line.total)
  END HABERES,
@@ -81,6 +64,7 @@ SELECT rc.name AS "Company_name",
  hr_payslip_run.payment_period AS "payment_period",
  hr_payslip.date_from as "period",
  iat.store_fname AS "Company_image",
+ iatf.store_fname AS "Signature_image",
  icp.value AS "Filestore_path"
 
  FROM hr_payslip
@@ -95,15 +79,18 @@ SELECT rc.name AS "Company_name",
  LEFT JOIN res_partner as rpc
  	ON rc.partner_id = rpc.id
  LEFT JOIN hr_contract
- 	ON hr_contract.employee_id = hr_employee.id
+ 	ON hr_payslip.contract_id = hr_contract.id
 LEFT JOIN account_analytic_account aaa
 	ON hr_contract.analytic_account_id = aaa.id
 JOIN hr_payroll_structure str
 	ON hr_contract.struct_id = str.id
  LEFT JOIN hr_department
  	ON hr_employee.sector_id = hr_department.id
+JOIN res_partner rp
+    ON hr_employee.address_home_id = rp.id
 LEFT JOIN res_partner_bank
-	ON hr_employee.bank_account_id = res_partner_bank.id
+	ON rp.id = res_partner_bank.partner_id
+    AND res_partner_bank.order_payment_salaries = 1
 LEFT JOIN res_bank
 	ON res_partner_bank.bank_id = res_bank.id
  LEFT JOIN hr_payslip_run
@@ -117,20 +104,24 @@ LEFT JOIN res_bank
  	ON iat.res_id = rpc.id
 	AND iat.res_model = 'res.partner'
 	AND iat.res_field = 'image'
+ LEFT JOIN ir_attachment iatf
+ 	ON iatf.res_id = rpc.id
+	AND iatf.res_model = 'res.partner'
+	AND iatf.index_content = 'image'
+    AND iatf.description = 'firma'
  LEFT JOIN ir_config_parameter icp
  	ON icp.key = 'filestore.path'
 JOIN recognized_antiquity
 	ON recognized_antiquity.employee_id = hr_payslip.employee_id
 LEFT JOIN header_salary
 	ON header_salary.slip_id = hr_payslip.id
-LEFT JOIN lic_qty
-	ON hr_payslip.id = lic_qty.payslip_id
 
 
 WHERE $X{IN, hr_payslip.id, IDS}
 
  AND hr_payslip_line.appears_on_payslip=true
  AND hr_payslip_line.code <> 'NET'
+ AND hr_payslip_line.total != 0
 
  ORDER BY hr_contract.struct_id, hr_department.code, hr_employee.other_id, hr_payslip.date_from DESC, hr_payslip.id DESC, hr_payslip_line.code ASC]]>
 	</queryString>
@@ -140,9 +131,11 @@ WHERE $X{IN, hr_payslip.id, IDS}
 		<fieldDescription><![CDATA[Phone]]></fieldDescription>
 	</field>
 	<field name="street" class="java.lang.String">
-		<fieldDescription><![CDATA[Street]]></fieldDescription>
+		<fieldDescription><![CDATA[street]]></fieldDescription>
 	</field>
-	<field name="cuit" class="java.lang.String"/>
+	<field name="cuit" class="java.lang.String">
+		<fieldDescription><![CDATA[CUIT]]></fieldDescription>
+	</field>
 	<field name="code" class="java.lang.String">
 		<fieldDescription><![CDATA[Code]]></fieldDescription>
 	</field>
@@ -159,21 +152,24 @@ WHERE $X{IN, hr_payslip.id, IDS}
 	<field name="employee_cuil" class="java.lang.String"/>
 	<field name="legajo" class="java.lang.String"/>
 	<field name="inicio_contrat" class="java.sql.Date"/>
-	<field name="contract_salary" class="java.math.BigDecimal"/>
+	<field name="contract_salary" class="java.lang.Double"/>
 	<field name="employee_sector" class="java.lang.String"/>
 	<field name="employee_category" class="java.lang.String"/>
 	<field name="employee_sector_code" class="java.lang.String"/>
 	<field name="bank_name" class="java.lang.String"/>
 	<field name="accounting_payment_date" class="java.sql.Date"/>
 	<field name="payment_date" class="java.sql.Date">
-		<fieldDescription><![CDATA[Fecha de Pago]]></fieldDescription>
+		<fieldDescription><![CDATA[Payment Date]]></fieldDescription>
 	</field>
 	<field name="social_charge_pd" class="java.sql.Date"/>
 	<field name="payment_period" class="java.sql.Date">
 		<fieldDescription><![CDATA[Payment Period]]></fieldDescription>
 	</field>
-	<field name="period" class="java.sql.Date"/>
+	<field name="period" class="java.sql.Date">
+		<fieldDescription><![CDATA[Days between each preventive maintenance]]></fieldDescription>
+	</field>
 	<field name="Company_image" class="java.lang.String"/>
+	<field name="Signature_image" class="java.lang.String"/>
 	<field name="Filestore_path" class="java.lang.String"/>
 	<variable name="suma_remunerativo" class="java.lang.Double" resetType="Group" resetGroup="payslip_id" calculation="Sum">
 		<variableExpression><![CDATA[]]></variableExpression>
@@ -211,7 +207,7 @@ WHERE $X{IN, hr_payslip.id, IDS}
 	<group name="payslip_id" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{payslip_id}]]></groupExpression>
 		<groupHeader>
-			<band height="179">
+			<band height="173">
 				<rectangle>
 					<reportElement x="350" y="51" width="50" height="34"/>
 				</rectangle>
@@ -270,25 +266,25 @@ WHERE $X{IN, hr_payslip.id, IDS}
 					<text><![CDATA[FECHA INGRESO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="6" y="156" width="30" height="14"/>
+					<reportElement mode="Transparent" x="2" y="156" width="30" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[COD.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="37" y="156" width="110" height="14"/>
+					<reportElement mode="Transparent" x="32" y="156" width="127" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[CONCEPTO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="148" y="156" width="43" height="14"/>
+					<reportElement mode="Transparent" x="161" y="156" width="29" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font size="7"/>
 					</textElement>
-					<text><![CDATA[UNIDADES]]></text>
+					<text><![CDATA[UNID]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Transparent" x="192" y="156" width="58" height="14"/>
@@ -328,10 +324,10 @@ WHERE $X{IN, hr_payslip.id, IDS}
 					<reportElement x="240" y="121" width="1" height="34"/>
 				</line>
 				<line>
-					<reportElement x="37" y="155" width="1" height="16"/>
+					<reportElement x="31" y="155" width="1" height="16"/>
 				</line>
 				<line>
-					<reportElement x="146" y="155" width="1" height="16"/>
+					<reportElement x="160" y="155" width="1" height="16"/>
 				</line>
 				<line>
 					<reportElement x="250" y="155" width="1" height="16"/>
@@ -535,25 +531,25 @@ WHERE $X{IN, hr_payslip.id, IDS}
 					<text><![CDATA[FECHA INGRESO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="425" y="156" width="30" height="14"/>
+					<reportElement mode="Transparent" x="421" y="156" width="30" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[COD.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="456" y="156" width="110" height="14"/>
+					<reportElement mode="Transparent" x="452" y="156" width="126" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[CONCEPTO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="567" y="156" width="43" height="14"/>
+					<reportElement mode="Transparent" x="579" y="157" width="31" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font size="7"/>
 					</textElement>
-					<text><![CDATA[UNIDADES]]></text>
+					<text><![CDATA[UNID]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Transparent" x="611" y="156" width="58" height="14"/>
@@ -593,10 +589,10 @@ WHERE $X{IN, hr_payslip.id, IDS}
 					<reportElement x="658" y="121" width="1" height="34"/>
 				</line>
 				<line>
-					<reportElement x="456" y="155" width="1" height="16"/>
+					<reportElement x="450" y="155" width="1" height="16"/>
 				</line>
 				<line>
-					<reportElement x="565" y="155" width="1" height="16"/>
+					<reportElement x="578" y="155" width="1" height="16"/>
 				</line>
 				<line>
 					<reportElement x="669" y="155" width="1" height="16"/>
@@ -779,22 +775,22 @@ WHERE $X{IN, hr_payslip.id, IDS}
 				<reportElement stretchType="RelativeToTallestObject" x="419" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="457" y="169" width="1" height="235"/>
+				<reportElement x="450" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="741" y="169" width="1" height="235"/>
+				<reportElement x="740" y="169" width="1" height="235"/>
 			</line>
 			<line>
 				<reportElement stretchType="RelativeToTallestObject" x="819" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="566" y="169" width="1" height="235"/>
+				<reportElement x="578" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="670" y="169" width="1" height="235"/>
+				<reportElement x="669" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="611" y="169" width="1" height="235"/>
+				<reportElement x="610" y="169" width="1" height="235"/>
 			</line>
 			<line>
 				<reportElement x="420" y="169" width="399" height="1"/>
@@ -806,16 +802,16 @@ WHERE $X{IN, hr_payslip.id, IDS}
 				<reportElement stretchType="RelativeToTallestObject" x="400" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="38" y="169" width="1" height="235"/>
+				<reportElement x="31" y="169" width="1" height="235"/>
 			</line>
 			<line>
 				<reportElement x="1" y="169" width="399" height="1"/>
 			</line>
 			<line>
-				<reportElement x="322" y="169" width="1" height="235"/>
+				<reportElement x="321" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="147" y="169" width="1" height="235"/>
+				<reportElement x="160" y="169" width="1" height="235"/>
 			</line>
 			<line>
 				<reportElement stretchType="RelativeToTallestObject" x="0" y="169" width="1" height="236"/>
@@ -824,10 +820,10 @@ WHERE $X{IN, hr_payslip.id, IDS}
 				<reportElement x="1" y="404" width="400" height="1"/>
 			</line>
 			<line>
-				<reportElement x="251" y="169" width="1" height="235"/>
+				<reportElement x="250" y="169" width="1" height="235"/>
 			</line>
 			<line>
-				<reportElement x="192" y="169" width="1" height="235"/>
+				<reportElement x="191" y="169" width="1" height="235"/>
 			</line>
 		</band>
 	</background>
@@ -838,112 +834,112 @@ WHERE $X{IN, hr_payslip.id, IDS}
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="11" splitType="Prevent">
-			<textField>
-				<reportElement x="146" y="0" width="44" height="9"/>
-				<textElement textAlignment="Right" lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{quantity} !=0? $F{quantity} : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="193" y="0" width="56" height="9"/>
-				<textElement textAlignment="Right" lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{haberes} != 0 ? $F{haberes} : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="333" y="0" width="64" height="9"/>
-				<box leftPadding="0" rightPadding="0">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" lineSpacing="Single" markup="none">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{descuentos} != 0? $F{descuentos}:""]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="40" y="0" width="108" height="9"/>
-				<textElement lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{payslip_line_concept}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="0" width="38" height="9"/>
-				<box leftPadding="0">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{code}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="566" y="0" width="44" height="9"/>
-				<textElement textAlignment="Right" lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{quantity} !=0? $F{quantity} : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="613" y="0" width="56" height="9"/>
-				<textElement textAlignment="Right" lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{haberes} != 0 ? $F{haberes} : ""]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="753" y="0" width="64" height="9"/>
-				<box leftPadding="0" rightPadding="0">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" lineSpacing="Single" markup="none">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{descuentos} != 0? $F{descuentos}:""]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="460" y="0" width="108" height="9"/>
-				<textElement lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{payslip_line_concept}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="420" y="0" width="38" height="9"/>
-				<box leftPadding="0">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" lineSpacing="Single">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{code}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="254" y="0" width="64" height="9"/>
+		<band height="10" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="159" y="0" width="30" height="9" isPrintWhenDetailOverflows="true"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="7"/>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{quantity} !=0? $F{quantity} : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="193" y="0" width="56" height="9" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{haberes} != 0 ? $F{haberes} : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="333" y="0" width="64" height="9" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descuentos} != 0? $F{descuentos}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="33" y="0" width="128" height="9" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{payslip_line_concept}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="9" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="577" y="0" width="30" height="9" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{quantity} !=0? $F{quantity} : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="613" y="0" width="56" height="9" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{haberes} != 0 ? $F{haberes} : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="753" y="0" width="64" height="9" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single" markup="none">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descuentos} != 0? $F{descuentos}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="452" y="0" width="128" height="9" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{payslip_line_concept}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="420" y="0" width="30" height="9" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="254" y="0" width="64" height="9" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{exentos} != 0 ? $F{exentos}:""]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="677" y="0" width="62" height="9"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="677" y="0" width="62" height="9" isPrintWhenDetailOverflows="true"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{exentos} != 0 ? $F{exentos}:""]]></textFieldExpression>
 			</textField>
@@ -1055,20 +1051,20 @@ WHERE $X{IN, hr_payslip.id, IDS}
 				<text><![CDATA[Banco:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="275" y="125" width="124" height="1"/>
+				<reportElement x="275" y="134" width="124" height="1"/>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="301" y="127" width="81" height="11"/>
+				<reportElement x="301" y="136" width="81" height="11"/>
 				<textElement lineSpacing="Single">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Firma del empleado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="127" width="118" height="11"/>
+				<reportElement x="2" y="137" width="118" height="11"/>
 				<textElement lineSpacing="Single">
 					<font size="8"/>
 				</textElement>
@@ -1077,14 +1073,14 @@ WHERE $X{IN, hr_payslip.id, IDS}
 			<textField isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" x="0" y="108" width="254" height="17"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="8"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{total_texto}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="313" y="75" width="86" height="16"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{salario_neto}]]></textFieldExpression>
 			</textField>
@@ -1105,7 +1101,7 @@ WHERE $X{IN, hr_payslip.id, IDS}
 			<textField isBlankWhenNull="true">
 				<reportElement x="339" y="23" width="60" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="7"/>
+					<font size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{descuentos1}]]></textFieldExpression>
 			</textField>
@@ -1206,20 +1202,20 @@ WHERE $X{IN, hr_payslip.id, IDS}
 				<text><![CDATA[Banco:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="694" y="124" width="124" height="1"/>
+				<reportElement x="694" y="135" width="124" height="1"/>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="720" y="126" width="89" height="11"/>
+				<reportElement x="720" y="137" width="89" height="11"/>
 				<textElement lineSpacing="Single">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Firma del empleador]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="421" y="126" width="118" height="11"/>
+				<reportElement x="421" y="137" width="118" height="11"/>
 				<textElement lineSpacing="Single">
 					<font size="8"/>
 				</textElement>
@@ -1228,14 +1224,14 @@ WHERE $X{IN, hr_payslip.id, IDS}
 			<textField isBlankWhenNull="true">
 				<reportElement x="419" y="107" width="254" height="17"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="8"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{total_texto}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="732" y="74" width="86" height="16"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{salario_neto}]]></textFieldExpression>
 			</textField>
@@ -1249,7 +1245,7 @@ WHERE $X{IN, hr_payslip.id, IDS}
 			<textField isBlankWhenNull="true">
 				<reportElement x="758" y="22" width="60" height="14"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="7"/>
+					<font size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{descuentos1}]]></textFieldExpression>
 			</textField>
@@ -1267,20 +1263,6 @@ WHERE $X{IN, hr_payslip.id, IDS}
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{social_charge_pd}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="197" y="83" width="33" height="12"/>
-				<textElement verticalAlignment="Middle" lineSpacing="Single">
-					<font size="6"/>
-				</textElement>
-				<text><![CDATA[FRANCES]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="616" y="82" width="33" height="12"/>
-				<textElement verticalAlignment="Middle" lineSpacing="Single">
-					<font size="6"/>
-				</textElement>
-				<text><![CDATA[FRANCES]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="52" y="56" width="45" height="16"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
@@ -1312,14 +1294,14 @@ WHERE $X{IN, hr_payslip.id, IDS}
 			<textField isBlankWhenNull="true">
 				<reportElement x="271" y="23" width="66" height="13"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="7"/>
+					<font size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{exentos1}!=null?$V{exentos1}:"0.00"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="691" y="21" width="66" height="13"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-					<font size="7"/>
+					<font size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$V{exentos1}!=null?$V{exentos1}:"0.00"]]></textFieldExpression>
 			</textField>
@@ -1337,6 +1319,24 @@ WHERE $X{IN, hr_payslip.id, IDS}
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{payment_period}]]></textFieldExpression>
 			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" x="194" y="83" width="60" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bank_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="FixRelativeToBottom" x="612" y="82" width="60" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{bank_name}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="694" y="92" width="124" height="43"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path}+$F{Signature_image}]]></imageExpression>
+			</image>
 		</band>
 	</pageFooter>
 	<summary>
