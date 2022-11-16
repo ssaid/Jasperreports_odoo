@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 4.0.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="101"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="255" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="413" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="30" width="100" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[hola]]></text>
+			</staticText>
+			<image isUsingCache="false">
+				<reportElement x="202" y="11" width="208" height="139"/>
+				<imageExpression class="java.lang.String"><![CDATA["https://www.fundacion-affinity.org/sites/default/files/los-10-sonidos-principales-del-perro.jpg"
+]]></imageExpression>
+			</image>
+			<image isUsingCache="false">
+				<reportElement x="202" y="180" width="208" height="139"/>
+				<imageExpression class="java.lang.String"><![CDATA["https://ypf12.staging.e-mips.com.ar/report/barcode/?type=QR&value=https://www.afip.gob.ar/fe/qr/?p=AAAAAAAAAAAAAAA&width=500&height=500"
+]]></imageExpression>
+			</image>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<staticText>
+				<reportElement x="250" y="32" width="100" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[Static text]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
