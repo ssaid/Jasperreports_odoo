@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="retention_certificate" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="165"/>
+	<property name="ireport.y" value="240"/>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[SELECT  apo.id AS "Voucher_id",
+        apo.type AS "Voucher_type",
+        apo.number AS "Voucher_number",
+        apo.date AS "Voucher_date",
+        apo.state AS "Voucher_state",
+        rpc.name AS "Company_name",
+        rpc.vat AS "Company_cuit",
+		coalesce(afpc.name, 'n/a') AS "Company_fiscal_position",
+		rpc.nro_insc_iibb AS "Company_iibb_number",
+        (rpc.street || ', ' || rcsc.name) AS "Company_address",
+        rpc.website	AS "Company_website",
+        rpc.phone AS "Company_phone",
+        rpc.email AS "Company_email",
+        rp.name	AS "Partner_name",
+        (rp.street || ', ' || rcs.name) AS "Partner_address",
+        rp.vat AS "Partner_cuit",
+		rp.nro_insc_iibb AS "Partner_iibb_number",
+		coalesce(afp.name, 'n/a') AS "Partner_fiscal_position",
+        rtl.id AS "Retention_line_id",
+        rtl.name AS "Retention_name",
+        rtl.date AS "Retention_date",
+        rtl.certificate_no AS "Retention_certificate",
+        rtl.base AS "Retention_base",
+        rtl.amount AS "Retention_amount",
+        aml.name AS "Retention_invoices",
+        iat.store_fname AS "Company_image",
+        icp.value AS "Filestore_path"
+
+FROM account_payment_order apo
+	JOIN res_company rc	ON rc.id = apo.company_id
+	JOIN res_partner rp	ON rp.id = apo.partner_id
+	JOIN res_partner rpc ON rpc.id = rc.partner_id
+	LEFT JOIN res_country_state rcsc ON rcsc.id = rpc.state_id
+	LEFT JOIN res_country_state rcs ON rcs.id = rp.state_id
+	LEFT JOIN retention_tax_line rtl ON rtl.payment_order_id = apo.id
+	LEFT JOIN ir_property ip ON ip.name ~ 'property_account_position'
+            AND ip.res_id=CONCAT('res.partner,',rp.id)
+	LEFT JOIN ir_property ipc ON ipc.name ~ 'property_account_position'
+            AND ipc.res_id=CONCAT('res.partner,',rpc.id)
+    	LEFT JOIN account_fiscal_position afp ON split_part(ip.value_reference, ',', 2)::int=afp.id
+	LEFT JOIN account_fiscal_position afpc ON split_part(ipc.value_reference, ',', 2)::int=afpc.id
+	LEFT JOIN retention_tax_line_move_line_rel rtlmlr ON rtlmlr.retention_line_id = rtl.id
+	LEFT JOIN account_move_line aml ON rtlmlr.move_line_id = aml.id
+	LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+	LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+WHERE $X{IN, apo.id, IDS}]]>
+	</queryString>
+	<field name="Voucher_id" class="java.lang.Integer"/>
+	<field name="Voucher_type" class="java.lang.String"/>
+	<field name="Voucher_number" class="java.lang.String"/>
+	<field name="Voucher_date" class="java.sql.Date"/>
+	<field name="Voucher_state" class="java.lang.String"/>
+	<field name="Company_name" class="java.lang.String"/>
+	<field name="Company_cuit" class="java.lang.String"/>
+	<field name="Company_fiscal_position" class="java.lang.String"/>
+	<field name="Company_iibb_number" class="java.lang.String"/>
+	<field name="Company_address" class="java.lang.String"/>
+	<field name="Company_website" class="java.lang.String"/>
+	<field name="Company_phone" class="java.lang.String"/>
+	<field name="Company_email" class="java.lang.String"/>
+	<field name="Partner_name" class="java.lang.String"/>
+	<field name="Partner_address" class="java.lang.String"/>
+	<field name="Partner_cuit" class="java.lang.String"/>
+	<field name="Partner_iibb_number" class="java.lang.String"/>
+	<field name="Partner_fiscal_position" class="java.lang.String"/>
+	<field name="Retention_line_id" class="java.lang.Integer"/>
+	<field name="Retention_name" class="java.lang.String"/>
+	<field name="Retention_date" class="java.sql.Date"/>
+	<field name="Retention_certificate" class="java.lang.String"/>
+	<field name="Retention_base" class="java.math.BigDecimal"/>
+	<field name="Retention_amount" class="java.math.BigDecimal"/>
+	<field name="Retention_invoices" class="java.lang.String"/>
+	<field name="Company_image" class="java.lang.String"/>
+	<field name="Filestore_path" class="java.lang.String"/>
+	<group name="retention_line_id" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{Retention_line_id}]]></groupExpression>
+		<groupHeader>
+			<band height="156">
+				<rectangle>
+					<reportElement x="0" y="10" width="555" height="134" forecolor="#000099"/>
+					<graphicElement>
+						<pen lineWidth="1.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="39" y="0" width="191" height="155" forecolor="#FF0000"/>
+				</rectangle>
+				<textField>
+					<reportElement x="39" y="86" width="191" height="12" forecolor="#FF0000"/>
+					<box leftPadding="2"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="64" y="98" width="166" height="12" forecolor="#FF0000"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_cuit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="64" y="122" width="166" height="12" forecolor="#FF0000"/>
+					<box leftPadding="2"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_website}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="39" y="98" width="36" height="12" forecolor="#FF0000"/>
+					<box leftPadding="2"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[CUIT:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="39" y="110" width="191" height="12" forecolor="#FF0000"/>
+					<box leftPadding="2"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_address}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="64" y="132" width="166" height="12" forecolor="#FF0000"/>
+					<box leftPadding="2"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_phone}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="240" y="10" width="307" height="25" forecolor="#000099"/>
+					<box rightPadding="4"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="18" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Certificado de Retención"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="240" y="35" width="307" height="25" forecolor="#000099"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["N° " + $F{Retention_certificate}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="240" y="71" width="307" height="15" forecolor="#000099"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA["Fecha de retención: " + $F{Retention_date}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="39" y="132" width="36" height="12" forecolor="#FF0000"/>
+					<box leftPadding="2"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Tel.:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="39" y="122" width="36" height="12" forecolor="#FF0000"/>
+					<box leftPadding="2"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Web:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="240" y="104" width="307" height="30" forecolor="#FF0000">
+						<printWhenExpression><![CDATA[$F{Voucher_state} == "cancel"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="22" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Anulado]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="240" y="86" width="307" height="15" forecolor="#000099"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{Retention_name}]]></textFieldExpression>
+				</textField>
+				<image hAlign="Center" vAlign="Middle">
+					<reportElement x="42" y="10" width="185" height="76"/>
+					<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path} + $F{Company_image}]]></imageExpression>
+				</image>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="373" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="10" width="555" height="20" forecolor="#000000" backcolor="#CCCCFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos del Agente de Retención]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="40" width="250" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="60" width="250" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="347" y="40" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUIT]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="447" y="40" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_cuit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="347" y="60" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condicion IVA]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="447" y="60" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_fiscal_position}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="347" y="80" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ingresos Brutos]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="447" y="80" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_iibb_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="115" width="555" height="20" forecolor="#000000" backcolor="#CCCCFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos del Sujeto Retenido]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="145" width="250" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="165" width="250" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="347" y="185" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ingresos Brutos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="165" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condicion IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="145" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUIT]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="447" y="145" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_cuit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="447" y="165" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_fiscal_position}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="447" y="185" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_iibb_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="222" width="555" height="20" forecolor="#000000" backcolor="#CCCCFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos de la Retención]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="252" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="252" width="455" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Retention_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="272" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Certificado N°]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="272" width="455" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Retention_certificate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="292" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Base]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="100" y="292" width="455" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Retention_base}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="312" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="100" y="312" width="455" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Retention_amount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="332" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="100" y="332" width="455" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Retention_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="352" width="100" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comprobantes]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="352" width="455" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Retention_invoices}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="188" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="10" width="555" height="20" forecolor="#000000" backcolor="#CCCCFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firma del Agente de Retención]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[Declaro que los datos consignados en este formulario son correctos y completos sin omitir ni falsear dato alguno
+que deba contener, siendo fiel expresión de la verdad.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="150" y="131" width="250" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="132" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single"/>
+				<text><![CDATA[Firma y Aclaracion]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="168" width="285" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="168" width="80" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="514" y="168" width="40" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

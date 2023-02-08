@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.13.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_picking_cmb" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a3a4fbe7-9d4e-4199-baa5-1496b704b438">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="480"/>
+	<property name="ireport.y" value="15"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MACRO_DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="208"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="784"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/martin/Reports/jrxml/v11/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IDS" class="java.lang.Object" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT  sp.id AS picking_id,
+        sp.name AS picking_name,
+        rp.name AS partner_name,
+        sp.date_done::date AS picking_date,
+        rpc.name AS company_name,
+        rp.street AS partner_street,
+        lpad(split_part(sp.name, '/', 3)::text, 8, '0') AS picking_number,
+        rp.city AS partner_city,
+        rcou.name AS partner_country_state,
+        rp.vat AS partner_vat,
+        sp.picking_type_id AS picking_type,
+        rp.ref AS partner_ref,
+        spt.code AS type,
+        pt.default_code as default_code,
+        pt.name as template_name,
+        CASE
+            WHEN afp.name = 'RI'
+                THEN 'Responsable Inscripto'
+            ELSE
+                afp.name
+        END AS partner_fiscal_position,
+
+        -- Details
+        it_uom.value AS unit_of_measure,
+        sml.qty_done::integer AS qty_done,
+        sm.comes_from_combo
+
+FROM stock_picking sp
+JOIN stock_picking_type spt
+    ON spt.id = sp.picking_type_id
+LEFT JOIN res_partner rp
+    ON rp.id = sp.partner_id
+LEFT JOIN res_country_state rcou
+    ON rcou.id = rp.state_id
+LEFT JOIN res_partner rpc
+    ON rpc.id = sp.company_id
+LEFT JOIN ir_property ip
+    ON split_part(ip.res_id, ',', 1)::text = 'res.partner'
+        AND split_part(ip.value_reference, ',', 1)::text = 'account.fiscal.position'
+        AND split_part(ip.res_id, ',', 2)::integer = rp.id
+        AND ip.company_id=sp.company_id
+LEFT JOIN account_fiscal_position afp
+    ON split_part(ip.value_reference, ',', 1)::text = 'account.fiscal.position'
+        AND split_part(ip.value_reference, ',', 2)::integer = afp.id
+
+-- Details
+JOIN stock_move sm
+    ON sm.picking_id = sp.id
+JOIN stock_move_line sml
+    ON sml.move_id = sm.id
+JOIN product_product pp
+    ON pp.id = sm.product_id
+JOIN product_template pt
+    ON pt.id = pp.product_tmpl_id
+LEFT JOIN product_uom pu
+    ON sml.product_uom_id = pu.id
+LEFT JOIN ir_translation it_uom
+    ON SPLIT_PART(it_uom.name, ',', 1) = 'product.uom'
+        AND SPLIT_PART(it_uom.name, ',', 2) = 'name'
+        AND it_uom.res_id = pu.id
+        AND it_uom.lang = 'es_AR'
+        AND it_uom.state = 'translated'
+LEFT JOIN sale_order so ON (sp.origin = so.name)
+--LEFT JOIN combo_data ON combo_data.pt_id_join = pt.id
+WHERE $X{IN, sp.id, IDS}]]>
+	</queryString>
+	<field name="picking_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="picking_id"/>
+	</field>
+	<field name="picking_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="picking_name"/>
+	</field>
+	<field name="partner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_name"/>
+	</field>
+	<field name="picking_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="picking_date"/>
+	</field>
+	<field name="company_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
+	</field>
+	<field name="partner_street" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_street"/>
+	</field>
+	<field name="picking_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="picking_number"/>
+	</field>
+	<field name="partner_city" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_city"/>
+	</field>
+	<field name="partner_country_state" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_country_state"/>
+	</field>
+	<field name="partner_vat" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_vat"/>
+	</field>
+	<field name="picking_type" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="picking_type"/>
+	</field>
+	<field name="partner_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_ref"/>
+	</field>
+	<field name="type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="type"/>
+	</field>
+	<field name="default_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="default_code"/>
+	</field>
+	<field name="template_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="template_name"/>
+	</field>
+	<field name="partner_fiscal_position" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_fiscal_position"/>
+	</field>
+	<field name="unit_of_measure" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="unit_of_measure"/>
+	</field>
+	<field name="qty_done" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="qty_done"/>
+	</field>
+	<field name="comes_from_combo" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="comes_from_combo"/>
+	</field>
+	<title>
+		<band height="271">
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="140" width="286" height="12" isRemoveLineWhenBlank="true" uuid="9a2c2016-0a13-4527-88df-7f9e3017166e"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="400" y="60" width="130" height="12" isRemoveLineWhenBlank="true" uuid="5959012d-e37b-412d-9e71-2ddf7eec70c3"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{picking_date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="160" width="286" height="12" isRemoveLineWhenBlank="true" uuid="a36e3b4f-506e-43dd-86b5-e617cfa33ced"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_street}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="180" width="100" height="12" isRemoveLineWhenBlank="true" uuid="9159152d-355b-4d5a-a795-992494ba3912"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_city}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="180" width="180" height="12" isRemoveLineWhenBlank="true" uuid="a6f5a956-4569-4e8a-b577-8ca1930e235f"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_country_state}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="390" y="160" width="150" height="12" isRemoveLineWhenBlank="true" uuid="8575da1e-4abd-43a0-a904-4f115a7d6bf7"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_vat}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="210" width="286" height="12" uuid="5b6b794e-74d7-4e5e-8e6d-e5dec19cf395"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_fiscal_position}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="390" y="140" width="150" height="12" uuid="f44dc747-340c-423a-8ba4-450dcf9f00c1"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partner_ref}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="70">
+			<textField>
+				<reportElement x="100" y="59" width="50" height="11" uuid="dccd5690-b2bc-4ce9-a7ce-c2cb94d35e9f">
+					<printWhenExpression><![CDATA[$F{comes_from_combo} != true]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty_done}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="59" width="60" height="11" uuid="711d713b-a7a8-4fe2-996e-e4958ed4e869">
+					<printWhenExpression><![CDATA[$F{comes_from_combo} != true]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unit_of_measure}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="20" y="59" width="80" height="11" isRemoveLineWhenBlank="true" uuid="11e34a5c-eaec-4e16-84bb-490ced4187e2">
+					<printWhenExpression><![CDATA[$F{comes_from_combo} != true]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{default_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="59" width="330" height="11" uuid="5e889d4f-ca57-4eef-bd5f-4843e6cafea7">
+					<printWhenExpression><![CDATA[$F{comes_from_combo} != true]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{template_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52">
+			<textField>
+				<reportElement x="35" y="36" width="99" height="14" uuid="b99bcdf5-5d82-4012-8eed-c6c85ce39a4f"/>
+				<textElement markup="html">
+					<font size="10"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{picking_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

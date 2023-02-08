@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="diary" language="groovy" pageWidth="612" pageHeight="1008" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.7715610000000026"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="x_date_begin" class="java.lang.String"/>
+	<parameter name="x_date_end" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[WITH main_resulset AS(
+SELECT
+rc.name AS "Company_name",
+rc.company_registry AS "Company_registry",
+rp.street AS "Company_street",
+rp.zip AS "Company_zip",
+rcs.name AS "Company_state",
+rcty.name AS "Company_country",
+( COALESCE(rp.street, ' ') || ', ' || COALESCE(rcs.name, ' ') || ', ' || COALESCE(rcty.name, ' ') ) AS "Company_address",
+rp.phone AS "Company_phone",
+rp.vat AS "Company_cuit",
+rp.website AS "Company_website",
+rp.email AS "Company_email",
+afp.name AS "Company_fiscal_position",
+COALESCE(rp.nro_insc_iibb, '') AS "Company_nro_iibb",
+COALESCE(iat.store_fname, iat.store_fname) AS "Company_image",
+icp.value AS "Filestore_path",
+
+am.date AS "Move_date",
+dp.name AS "Move_period",
+dp.code AS "Move_period_code",
+dp.special AS "Move_period_special",
+aa.code AS "Move_line_account_code",
+aa.name AS "Move_line_account_name",
+SUM(aml.debit) AS "Move_line_debit",
+SUM(aml.credit) AS "Move_line_credit"
+
+FROM account_move am
+JOIN account_move_line aml
+	ON am.id = aml.move_id
+JOIN account_account aa
+	ON aml.account_id = aa.id
+JOIN date_period dp
+	ON am.period_id = dp.id
+JOIN res_company rc
+	ON am.company_id = rc.id
+JOIN res_partner rp
+	ON rc.partner_id = rp.id
+LEFT JOIN res_country_state rcs
+	ON rcs.id = rp.state_id
+LEFT JOIN res_country rcty
+	ON rcty.id = rp.country_id
+LEFT JOIN ir_property ipc
+	ON ipc.name ~ 'property_account_position'
+	AND ipc.res_id=CONCAT('res.partner,',rp.id)
+	AND ipc.company_id=am.company_id
+LEFT JOIN account_fiscal_position afp
+	ON split_part(ipc.value_reference, ',', 2)::int=afp.id
+LEFT JOIN ir_attachment iat
+	ON iat.res_id = rp.id
+	AND iat.res_model = 'res.partner'
+	AND iat.res_field = 'image'
+LEFT JOIN ir_config_parameter icp
+	ON icp.key = 'filestore.path'
+
+
+WHERE
+am.state = 'posted' AND
+am.date >= TO_DATE($P{x_date_begin}, 'YYYY-MM-DD') AND
+am.date <= TO_DATE($P{x_date_end}, 'YYYY-MM-DD') AND
+am.company_id = 1
+
+GROUP BY
+rc.name,
+rc.company_registry,
+rp.street,
+rp.zip,
+rcs.name,
+rcty.name,
+rp.street,
+rcs.name,
+rcty.name,
+rp.phone,
+rp.vat,
+rp.website,
+rp.email,
+afp.name,
+rp.nro_insc_iibb,
+iat.store_fname,
+iat.store_fname,
+icp.value,
+am.date,
+dp.name,
+aa.code,
+aa.name,
+dp.special,
+dp.code
+
+ORDER BY am.date, dp.special
+)
+
+SELECT
+"Company_name",
+"Company_registry",
+"Company_street",
+"Company_zip",
+"Company_state",
+"Company_country",
+"Company_address",
+"Company_phone",
+"Company_cuit",
+"Company_website",
+"Company_email",
+"Company_fiscal_position",
+"Company_nro_iibb",
+"Company_image",
+"Filestore_path",
+
+"Move_date",
+"Move_period",
+"Move_period_special",
+"Move_line_account_code",
+"Move_line_account_name",
+CASE
+	WHEN "Move_period_special" is True AND "Move_period_code" LIKE '%AP%' THEN 1
+	WHEN "Move_period_special" is True AND "Move_period_code" LIKE '%CIE%' THEN 3
+	WHEN "Move_period_special" is True AND "Move_period_code" LIKE '%CRE%' THEN 4
+	WHEN "Move_period_special" is True AND "Move_period_code" LIKE '%CPE%' THEN 5
+	ELSE 2
+END AS "Orden",
+ROUND(GREATEST( ("Move_line_debit" - "Move_line_credit") , 0 ) , 2) AS "Total_move_line_debit",
+ROUND(GREATEST( ("Move_line_credit" - "Move_line_debit") , 0 ) , 2) AS "Total_move_line_credit"
+
+FROM main_resulset
+
+ORDER BY "Orden","Move_date", "Move_period_special" DESC, "Total_move_line_debit" DESC, "Total_move_line_credit"]]>
+	</queryString>
+	<field name="Company_name" class="java.lang.String"/>
+	<field name="Company_registry" class="java.lang.String"/>
+	<field name="Company_street" class="java.lang.String"/>
+	<field name="Company_zip" class="java.lang.String"/>
+	<field name="Company_state" class="java.lang.String"/>
+	<field name="Company_country" class="java.lang.String"/>
+	<field name="Company_address" class="java.lang.String"/>
+	<field name="Company_phone" class="java.lang.String"/>
+	<field name="Company_cuit" class="java.lang.String"/>
+	<field name="Company_website" class="java.lang.String"/>
+	<field name="Company_email" class="java.lang.String"/>
+	<field name="Company_fiscal_position" class="java.lang.String"/>
+	<field name="Company_nro_iibb" class="java.lang.String"/>
+	<field name="Company_image" class="java.lang.String"/>
+	<field name="Filestore_path" class="java.lang.String"/>
+	<field name="Move_date" class="java.sql.Date"/>
+	<field name="Move_period" class="java.lang.String"/>
+	<field name="Move_period_special" class="java.lang.Boolean"/>
+	<field name="Move_line_account_code" class="java.lang.String"/>
+	<field name="Move_line_account_name" class="java.lang.String"/>
+	<field name="Orden" class="java.lang.Integer"/>
+	<field name="Total_move_line_debit" class="java.math.BigDecimal"/>
+	<field name="Total_move_line_credit" class="java.math.BigDecimal"/>
+	<variable name="count_move_id" class="java.lang.Integer" resetType="Group" resetGroup="periodo" incrementType="Group" incrementGroup="asiento" calculation="Count">
+		<variableExpression><![CDATA[$F{Move_date}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="debit_1" class="java.lang.Double" resetType="Group" resetGroup="asiento" calculation="Sum">
+		<variableExpression><![CDATA[$F{Total_move_line_debit}]]></variableExpression>
+	</variable>
+	<variable name="credit_1" class="java.lang.Double" resetType="Group" resetGroup="asiento" calculation="Sum">
+		<variableExpression><![CDATA[$F{Total_move_line_credit}]]></variableExpression>
+	</variable>
+	<group name="periodo">
+		<groupExpression><![CDATA[$F{Move_period}]]></groupExpression>
+	</group>
+	<group name="asiento">
+		<groupExpression><![CDATA[$F{Move_date}]]></groupExpression>
+		<groupHeader>
+			<band height="52">
+				<rectangle>
+					<reportElement x="0" y="0" width="572" height="27" backcolor="#F2E6E6"/>
+				</rectangle>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="414" y="1" width="50" height="13"/>
+					<textElement verticalAlignment="Top" lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{Move_date}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="88" y="29" width="296" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Cuenta"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="384" y="29" width="87" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Debito"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="481" y="29" width="87" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Credito"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="4" y="29" width="84" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Cod. cuenta"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="521" y="1" width="46" height="13"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Move_period}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="50" width="572" height="1" forecolor="#938C8C"/>
+				</line>
+				<staticText>
+					<reportElement x="384" y="1" width="30" height="13"/>
+					<textElement lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="481" y="1" width="40" height="13"/>
+					<textElement lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Periodo]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="45" y="1" width="27" height="13"/>
+					<textElement lineSpacing="Single">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{count_move_id} + 1]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1" y="1" width="44" height="13"/>
+					<textElement lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Número]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="13">
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="384" y="0" width="85" height="12"/>
+					<textElement textAlignment="Right" lineSpacing="Single">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{debit_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="481" y="0" width="87" height="12"/>
+					<textElement textAlignment="Right" lineSpacing="Single">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{credit_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="296" y="0" width="88" height="12"/>
+					<textElement lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Totales del asiento]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="65">
+			<image onErrorType="Blank">
+				<reportElement x="4" y="6" width="100" height="50"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path} + $F{Company_image}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="113" y="41" width="246" height="10"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_email}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="106" y="6" width="1" height="50"/>
+			</line>
+			<textField>
+				<reportElement x="113" y="8" width="140" height="10"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="30" width="69" height="10"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_country}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="264" y="19" width="95" height="10"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="19" width="129" height="10"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_street}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="113" y="30" width="177" height="10" isPrintWhenDetailOverflows="true"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_state}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="496" y="5" width="71" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[LIBRO DIARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="19" width="14" height="10"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Tel.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="2"/>
+	</columnHeader>
+	<detail>
+		<band height="15">
+			<printWhenExpression><![CDATA[($F{Total_move_line_debit} + $F{Total_move_line_credit}) != 0 || $F{Move_line_account_code} == '34100']]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="88" y="0" width="296" height="13"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Move_line_account_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="384" y="0" width="85" height="13"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Total_move_line_debit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="481" y="0" width="87" height="13"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Total_move_line_credit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="4" y="0" width="84" height="13"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Move_line_account_code}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="13" width="572" height="2" backcolor="#D8CFCF"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

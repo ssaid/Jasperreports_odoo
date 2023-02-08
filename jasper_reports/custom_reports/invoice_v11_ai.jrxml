@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 3.6.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_v11" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="415"/>
+	<style name="row_style" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" forecolor="#000000" backcolor="#DFDBDB" hAlign="Center" vAlign="Middle" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 1]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#F1F9FF" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Google Drive\\Ferraro\\Reportes\\FC Ferraro (Desagrupado)\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IDS" class="java.lang.Object"/>
+	<queryString>
+		<![CDATA[WITH translation AS
+(
+        WITH q1 AS
+        (
+            SELECT ai.id AS invoice_id, apt.id AS payment_term_id
+            FROM account_invoice ai
+            LEFT JOIN account_payment_term apt ON apt.id = ai.payment_term_id
+        )
+
+        SELECT q1.invoice_id AS invoice_id, src, value, lang
+        FROM ir_translation it
+        JOIN q1 ON it.name='account.payment.term,name'
+        AND res_id=q1.payment_term_id AND lang = 'es_AR'
+),
+
+invoice_discount AS
+(
+SELECT
+CASE WHEN iden.name = 'A' OR  ai.company_id = 3 THEN SUM (ail.quantity * ail.price_unit * (-ail.discount / 100) )
+	ELSE SUM(ail.quantity * (ail.price_unit * 1.21) * (-ail.discount / 100) )
+END AS discount,
+       ai.id AS invoice_id
+
+FROM account_invoice ai
+JOIN account_invoice_line ail ON ail.invoice_id = ai.id
+JOIN invoice_denomination iden ON iden.id = ai.denomination_id
+
+GROUP BY ai.id, iden.name
+)
+
+SELECT  rc.name AS "Company_name",
+        rc.company_registry AS "Company_registry",
+        rpw.street AS "Company_street",
+        rpw.zip AS "Company_zip",
+        rcsc.name AS "Company_state",
+        rctyc.name AS "Company_country",
+        ( COALESCE(rpw.street, ' ') || ', ' || COALESCE(rcsc.name, ' ') || ', ' || COALESCE(rctyc.name, ' ') ) AS "Company_address",
+        rpw.phone AS "Company_phone",
+        rpc.vat AS "Company_cuit",
+        rpc.website AS "Company_website",
+        rpw.email AS "Company_email",
+        afpc.name AS "Company_fiscal_position",
+        COALESCE(rpc.nro_insc_iibb, '') AS "Company_nro_iibb",
+        posar.activity_start_date AS "Company_start_date",
+        COALESCE(iatp.store_fname, iat.store_fname) AS "Company_image",
+        icp.value AS "Filestore_path",
+
+        rp.name AS "Partner_name",
+        rp.street AS "Partner_street",
+        rcs.name AS "Partner_state",
+        rcty.name AS "Partner_country",
+        ( COALESCE(rp.street || ', '  ,   ' ')  || COALESCE(rcs.name || ', '   ,   ' ') || COALESCE(rcty.name || ', '   ,   ' ') || COALESCE(' - CP ' || rp.zip, ' ') ) AS "Partner_address",
+        rp.zip AS "Partner_zip",
+        COALESCE(rdt.name, '') AS "Partner_document_type",
+        rp.vat AS "Partner_cuit",
+        afp.name AS "Partner_fiscal_position",
+
+        ai.id AS "Invoice_id",
+        rps.name AS "Invoice_seller",
+        CASE WHEN ai.type = 'out_invoice' AND ai.is_debit_note IS FALSE THEN 'Factura'
+	   WHEN ai.type = 'out_invoice' AND ai.is_debit_note IS TRUE THEN 'Nota de Débito'
+	   ELSE 'Nota de Crédito'
+        END AS "Invoice_type",
+        iden.name AS "Invoice_denomination",
+        LPAD(fevt.code::text , 2 , '0') AS "Invoice_voucher_type",
+        COALESCE(ai.internal_number, ' FC Borrador ') AS "Invoice_number",
+        rcurr.name AS "Invoice_currency",
+        COALESCE(TO_CHAR (ai.date_invoice, 'dd/mm/yyyy'), ' ') AS "Invoice_date",
+        COALESCE(TO_CHAR (ai.date_due, 'dd/mm/yyyy'), ' ') AS "Invoice_due_date",
+        COALESCE(ai.cae, ' ') AS "Invoice_cae",
+        COALESCE(TO_CHAR (ai.cae_due_date, 'dd/mm/yyyy'), ' ') AS "Invoice_cae_due_date",
+        ai.name AS "Invoice_ref",
+        ai.origin AS "Invoice_origin",
+        translation.value AS "Invoice_payment_term",
+        ai.amount_untaxed AS "Invoice_net_discount_subtotal",
+        (ai.amount_untaxed_no_disc + (-invoice_discount.discount)) AS "Invoice_subtotal",
+        ai.amount_total AS "Invoice_total",
+        ail.name AS "Invoice_line_description",
+        ail.quantity AS "Invoice_line_qty",
+        (ail.discount / 100) AS "Invoice_line_discount",
+        invoice_discount.discount AS "Invoice_sum_discount",
+        CASE WHEN iden.name LIKE 'B' AND at.price_include IS FALSE THEN (ail.price_unit *(1+at.amount/100))
+             WHEN iden.name LIKE 'A' AND at.price_include IS TRUE THEN (ail.price_unit / (1+at.amount/100))
+             ELSE ail.price_unit
+        END AS "Invoice_line_price_unit",
+        CASE WHEN iden.name LIKE 'B' THEN 'N/A'
+	   ELSE at.name
+        END AS "Invoice_line_tax",
+        CASE WHEN iden.name LIKE 'B' THEN ail.price_total_no_disc
+             ELSE ail.price_subtotal_no_disc
+        END AS "Invoice_line_total",
+        (rpc.vat || LPAD(fevt.code::text , 3 , '0') || posar.name || ai.cae || TO_CHAR (ai.date_due, 'yyyymmdd') ) AS "Invoice_barcode",
+        COALESCE(ai.first_discount_percent, 0) AS "Invoice_first_discount",
+        COALESCE(ai.second_discount_percent, 0) AS "Invoice_second_discount"
+
+
+FROM account_invoice ai
+    JOIN account_invoice_line ail ON ail.invoice_id = ai.id
+    JOIN invoice_denomination iden ON iden.id = ai.denomination_id
+    LEFT JOIN account_payment_term apt ON apt.id = ai.payment_term_id
+    LEFT JOIN account_invoice_line_tax ailt ON ailt.invoice_line_id = ail.id
+    LEFT JOIN account_tax at ON at.id = ailt.tax_id
+    LEFT JOIN wsfe_voucher_type fevt ON fevt.document_type = ai.type AND fevt.denomination_id = ai.denomination_id
+    LEFT JOIN pos_ar posar ON posar.id = ai.pos_ar_id
+    LEFT JOIN res_currency rcurr ON rcurr.id = ai.currency_id
+    LEFT JOIN translation ON translation.invoice_id=ai.id
+    JOIN invoice_discount ON invoice_discount.invoice_id = ai.id
+    LEFT JOIN res_users ru ON ru.id = ai.user_id
+    JOIN res_partner rps ON rps.id = ru.partner_id
+
+    JOIN res_partner rp ON rp.id = ai.partner_id
+    LEFT JOIN res_country_state rcs ON rcs.id = rp.state_id
+    LEFT JOIN res_country rcty ON rcty.id = rp.country_id
+    LEFT JOIN ir_property ip ON ip.name ~ 'property_account_position'
+            AND ip.res_id=CONCAT('res.partner,',rp.id) AND ip.company_id=ai.company_id
+    LEFT JOIN account_fiscal_position afp ON split_part(ip.value_reference, ',', 2)::int=afp.id
+	LEFT JOIN res_document_type rdt ON rdt.id = rp.document_type_id
+
+    JOIN res_company rc ON rc.id = ai.company_id
+    JOIN res_partner rpc ON rpc.id = rc.partner_id
+    JOIN stock_warehouse sw ON sw.id = posar.shop_id
+    LEFT JOIN res_partner rpw ON rpw.id = sw.partner_id
+    LEFT JOIN res_country_state rcsc ON rcsc.id = rpw.state_id
+    LEFT JOIN res_country rctyc ON rctyc.id = rpw.country_id
+    LEFT JOIN ir_property ipc ON ipc.name ~ 'property_account_position'
+            AND ipc.res_id=CONCAT('res.partner,',rpc.id) AND ipc.company_id=ai.company_id
+    LEFT JOIN account_fiscal_position afpc ON split_part(ipc.value_reference, ',', 2)::int=afpc.id
+    LEFT JOIN ir_attachment iat ON iat.res_id = rpc.id AND iat.res_model = 'res.partner' AND iat.res_field = 'image'
+    LEFT JOIN ir_attachment iatp ON iatp.res_id = ai.pos_ar_id AND iatp.res_model = 'pos.ar' AND iatp.res_field = 'image'
+    LEFT JOIN ir_config_parameter icp ON icp.key = 'filestore.path'
+
+
+WHERE $X{IN, ai.id, IDS}
+
+ORDER BY ai.internal_number, ail.id]]>
+	</queryString>
+	<field name="Company_name" class="java.lang.String"/>
+	<field name="Company_registry" class="java.lang.String"/>
+	<field name="Company_street" class="java.lang.String"/>
+	<field name="Company_zip" class="java.lang.String"/>
+	<field name="Company_state" class="java.lang.String"/>
+	<field name="Company_country" class="java.lang.String"/>
+	<field name="Company_address" class="java.lang.String"/>
+	<field name="Company_phone" class="java.lang.String"/>
+	<field name="Company_cuit" class="java.lang.String"/>
+	<field name="Company_website" class="java.lang.String"/>
+	<field name="Company_email" class="java.lang.String"/>
+	<field name="Company_fiscal_position" class="java.lang.String"/>
+	<field name="Company_nro_iibb" class="java.lang.String"/>
+	<field name="Company_start_date" class="java.sql.Date"/>
+	<field name="Company_image" class="java.lang.String"/>
+	<field name="Filestore_path" class="java.lang.String"/>
+	<field name="Partner_name" class="java.lang.String"/>
+	<field name="Partner_street" class="java.lang.String"/>
+	<field name="Partner_state" class="java.lang.String"/>
+	<field name="Partner_country" class="java.lang.String"/>
+	<field name="Partner_address" class="java.lang.String"/>
+	<field name="Partner_zip" class="java.lang.String"/>
+	<field name="Partner_document_type" class="java.lang.String"/>
+	<field name="Partner_cuit" class="java.lang.String"/>
+	<field name="Partner_fiscal_position" class="java.lang.String"/>
+	<field name="Invoice_id" class="java.lang.Integer"/>
+	<field name="Invoice_seller" class="java.lang.String"/>
+	<field name="Invoice_type" class="java.lang.String"/>
+	<field name="Invoice_denomination" class="java.lang.String"/>
+	<field name="Invoice_voucher_type" class="java.lang.String"/>
+	<field name="Invoice_number" class="java.lang.String"/>
+	<field name="Invoice_currency" class="java.lang.String"/>
+	<field name="Invoice_date" class="java.lang.String"/>
+	<field name="Invoice_due_date" class="java.lang.String"/>
+	<field name="Invoice_cae" class="java.lang.String"/>
+	<field name="Invoice_cae_due_date" class="java.lang.String"/>
+	<field name="Invoice_ref" class="java.lang.String"/>
+	<field name="Invoice_origin" class="java.lang.String"/>
+	<field name="Invoice_payment_term" class="java.lang.String"/>
+	<field name="Invoice_net_discount_subtotal" class="java.math.BigDecimal"/>
+	<field name="Invoice_subtotal" class="java.math.BigDecimal"/>
+	<field name="Invoice_total" class="java.math.BigDecimal"/>
+	<field name="Invoice_line_description" class="java.lang.String"/>
+	<field name="Invoice_line_qty" class="java.math.BigDecimal"/>
+	<field name="Invoice_line_discount" class="java.math.BigDecimal"/>
+	<field name="Invoice_sum_discount" class="java.math.BigDecimal"/>
+	<field name="Invoice_line_price_unit" class="java.math.BigDecimal"/>
+	<field name="Invoice_line_tax" class="java.lang.String"/>
+	<field name="Invoice_line_total" class="java.math.BigDecimal"/>
+	<field name="Invoice_barcode" class="java.lang.String"/>
+	<field name="Invoice_first_discount" class="java.math.BigDecimal"/>
+	<field name="Invoice_second_discount" class="java.math.BigDecimal"/>
+	<variable name="sum_dto" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Invoice_line_discount}]]></variableExpression>
+	</variable>
+	<variable name="first_discount_subtotal" class="java.lang.Double">
+		<variableExpression><![CDATA[(1- ($F{Invoice_first_discount} / 100)) * ($F{Invoice_subtotal} + $F{Invoice_sum_discount})]]></variableExpression>
+	</variable>
+	<variable name="second_discount_subtotal" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{first_discount_subtotal} * (1- ($F{Invoice_second_discount}/100))]]></variableExpression>
+	</variable>
+	<variable name="sum_price_unit" class="java.lang.Double" resetType="Group" resetGroup="invoice_id" calculation="Sum">
+		<variableExpression><![CDATA[$F{Invoice_line_price_unit}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="invoice_id" isStartNewPage="true" isResetPageNumber="true">
+		<groupExpression><![CDATA[$F{Invoice_id}]]></groupExpression>
+		<groupFooter>
+			<band height="76">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" x="473" y="63" width="83" height="12"/>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_total}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="255" y="14" width="185" height="12">
+						<printWhenExpression><![CDATA[($F{Invoice_first_discount} + $F{Invoice_sum_discount}) != 0]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descuento]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement x="472" y="14" width="83" height="12">
+						<printWhenExpression><![CDATA[($F{Invoice_first_discount} + $F{Invoice_sum_discount}) != 0]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_sum_discount} + (($F{Invoice_denomination} == "A" || $F{Company_name} == "Autopartes" ? $F{Invoice_subtotal} * (-$F{Invoice_first_discount}/100) : ($F{Invoice_subtotal} * (-$F{Invoice_first_discount}/100) ) * 1.21))]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement x="255" y="64" width="300" height="0">
+						<printWhenExpression><![CDATA[$F{Invoice_line_tax} != "N/A"]]></printWhenExpression>
+					</reportElement>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{Invoice_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "invoice_v11_tax_subreport.jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="439" y="26" width="33" height="12"/>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_currency}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="472" y="26" width="83" height="12"/>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_denomination} == "A" || $F{Company_name} == "Autopartes" ? $V{first_discount_subtotal} : $V{first_discount_subtotal} * 1.21]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="FixRelativeToBottom" x="256" y="63" width="185" height="12"/>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" x="440" y="63" width="33" height="12"/>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Bottom" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_currency}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="255" y="2" width="185" height="12"/>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[1er Subtotal]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="439" y="2" width="33" height="12"/>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_currency}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="472" y="2" width="83" height="12"/>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_denomination} == "A" || $F{Company_name} == "Autopartes" ? $F{Invoice_subtotal}: $V{sum_price_unit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="255" y="26" width="184" height="12"/>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{Invoice_first_discount}) != 0 ? "2do Subtotal" : "Subtotal"]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement positionType="Float" x="0" y="40" width="255" height="32" isPrintWhenDetailOverflows="true"/>
+					<subreportParameter name="IDS">
+						<subreportParameterExpression><![CDATA[$F{Invoice_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "invoice_v11_payments.jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="472" y="50" width="83" height="12">
+						<printWhenExpression><![CDATA[$F{Invoice_second_discount} != 0]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_denomination} == "A" || $F{Company_name} == "Autopartes" ? $V{second_discount_subtotal} : $V{second_discount_subtotal} * 1.21]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+					<reportElement x="472" y="38" width="83" height="12" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[$F{Invoice_second_discount} != 0]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_denomination} == "A" || $F{Company_name} == "Autopartes" ? $V{first_discount_subtotal} * (-$F{Invoice_second_discount}/100) : ($V{first_discount_subtotal} * (-$F{Invoice_second_discount}/100)) *1.21]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="255" y="50" width="184" height="12">
+						<printWhenExpression><![CDATA[$F{Invoice_second_discount} != 0]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["3er Subtotal"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="255" y="38" width="185" height="12" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[$F{Invoice_second_discount} != 0]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descuento]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="439" y="50" width="33" height="12">
+						<printWhenExpression><![CDATA[$F{Invoice_second_discount} != 0]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_currency}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement x="422" y="38" width="50" height="12" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[$F{Invoice_second_discount} != 0]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_second_discount} / 100]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement x="423" y="14" width="50" height="12" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[$F{Invoice_first_discount} != 0]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2">
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_first_discount} / 100]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band height="802" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="177" width="555" height="625"/>
+			</rectangle>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="270" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="157" width="555" height="20" backcolor="#A3A3A3"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="157" width="555" height="20" backcolor="#FFFFFF"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="65" y="177" width="270" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="65" y="197" width="270" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="177" width="65" height="20"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="197" width="65" height="20"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Domicilio]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="405" y="177" width="142" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_cuit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="335" y="197" width="70" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cond. Iva]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="405" y="197" width="142" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_fiscal_position}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="405" y="217" width="142" height="20"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_payment_term}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="335" y="217" width="70" height="20"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cond. Vta.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="237" width="70" height="20"/>
+				<box bottomPadding="2"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vendedor]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="405" y="237" width="142" height="20"/>
+				<box bottomPadding="2"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_seller}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="217" width="65" height="20"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Origen]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="65" y="217" width="270" height="20"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_origin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="237" width="65" height="20"/>
+				<box leftPadding="2" bottomPadding="2"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Referencia]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="65" y="237" width="270" height="20"/>
+				<box bottomPadding="2"/>
+				<textElement verticalAlignment="Bottom" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_ref}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="10" width="555" height="134" forecolor="#000099"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="382" y="10" width="165" height="30" forecolor="#000099"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_type}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="382" y="40" width="165" height="20" forecolor="#000099"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["N° " + $F{Invoice_number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="322" y="75" width="225" height="15" forecolor="#000099"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fecha de comprobante: " + $F{Invoice_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="322" y="90" width="225" height="15" forecolor="#000099"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Fecha de vencimiento: " + $F{Invoice_due_date}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="39" y="0" width="191" height="155" forecolor="#FF0000"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="50" y="86" width="180" height="12" forecolor="#FF0000"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_registry}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="75" y="122" width="155" height="12" forecolor="#FF0000"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_website}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="50" y="110" width="180" height="12" forecolor="#FF0000"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_address}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="75" y="132" width="155" height="12" forecolor="#FF0000"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_phone}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="50" y="132" width="25" height="12" forecolor="#FF0000"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Tel.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="50" y="122" width="25" height="12" forecolor="#FF0000"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Web:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="332" y="25" width="50" height="50"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="332" y="25" width="50" height="50"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font size="28" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_denomination}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="332" y="61" width="50" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["cod. " + $F{Invoice_voucher_type}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="235" y="13" width="97" height="12"/>
+				<textElement lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condicion de Iva]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="235" y="25" width="97" height="12"/>
+				<textElement lineSpacing="Single">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_fiscal_position}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="235" y="49" width="97" height="12"/>
+				<textElement lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inicio de Actividades]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="235" y="63" width="97" height="12"/>
+				<textElement lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Company_start_date}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="42" y="10" width="185" height="76"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Filestore_path} + $F{Company_image}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="335" y="177" width="70" height="20"/>
+				<textElement lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Partner_document_type}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="322" y="104" width="225" height="15" forecolor="#000099"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CUIT: " + $F{Company_cuit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="322" y="119" width="225" height="15" forecolor="#000099"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Ingresos Brutos: " + $F{Company_nro_iibb}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="257" width="555" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cambios y/o reclamos 30 dias corridos presentando factura]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="20" backcolor="#A3A3A3"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="250" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="250" y="0" width="70" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pcio. Unit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="320" y="0" width="40" height="20" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="360" y="0" width="40" height="20" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$F{Invoice_sum_discount} != 0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dto.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="400" y="0" width="85" height="20" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$F{Invoice_line_tax} != "N/A"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Impuesto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="485" y="0" width="70" height="20" backcolor="#FFFFFF"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<rectangle>
+				<reportElement style="row_style" stretchType="RelativeToTallestObject" x="1" y="0" width="554" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="250" height="15"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_line_description}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="250" y="0" width="70" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_line_price_unit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="320" y="0" width="40" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_line_qty}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="360" y="0" width="40" height="15">
+					<printWhenExpression><![CDATA[$F{Invoice_sum_discount} != 0]]></printWhenExpression>
+				</reportElement>
+				<box rightPadding="0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_line_discount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="400" y="0" width="85" height="15">
+					<printWhenExpression><![CDATA[$F{Invoice_line_tax} != "N/A"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_line_tax}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="485" y="0" width="70" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_line_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="86" splitType="Prevent">
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="185" y="27" width="85" height="12">
+					<printWhenExpression><![CDATA[$F{Invoice_cae} != " "]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="185" y="39" width="85" height="12">
+					<printWhenExpression><![CDATA[$F{Invoice_cae} != " "]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vencimiento CAE]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="270" y="27" width="80" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_cae}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="270" y="39" width="80" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Invoice_cae_due_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="416" y="66" width="114" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="66" width="400" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_email}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement x="530" y="66" width="25" height="20"/>
+				<box rightPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="66" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="50" y="0" width="505" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[147 - Teléfono Gratuito CABA, Área de Defensa y Protección al Consumidor]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="88" splitType="Prevent">
+			<staticText>
+				<reportElement positionType="Float" x="187" y="25" width="85" height="12">
+					<printWhenExpression><![CDATA[$F{Invoice_cae} != " "]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="187" y="37" width="85" height="12">
+					<printWhenExpression><![CDATA[$F{Invoice_cae} != " "]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vencimiento CAE]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="272" y="25" width="80" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_cae}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="272" y="37" width="80" height="12"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Invoice_cae_due_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="419" y="66" width="114" height="12"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="3" y="66" width="400" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_email}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="invoice_id" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="533" y="66" width="25" height="12"/>
+				<box rightPadding="2"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="3" y="65" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="50" y="0" width="506" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[147 - Teléfono Gratuito CABA, Área de Defensa y Protección al Consumidor]]></text>
+			</staticText>
+			<image>
+				<reportElement x="5" y="2" width="80" height="60">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression class="java.lang.String"><![CDATA["/opt/odoo/macro/app/jasper_reports/jasper_reports/custom_reports/qr_codes/invoice_"+$F{Invoice_id}+".jpg"]]></imageExpression>
+			</image>
+		</band>
+	</lastPageFooter>
+</jasperReport>

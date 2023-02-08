@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 4.0.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="blind_control_mini_report" language="groovy" pageWidth="595" pageHeight="420" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="70"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Macro"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="IDS" class="java.lang.Object">
+		<defaultValueExpression><![CDATA[[1536]]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[WITH total_box AS (
+    SELECT COUNT(DISTINCT box_number) AS total_box
+    FROM blind_control_line
+    JOIN blind_control ON blind_control.id = blind_control_line.control_id
+    WHERE $X{ IN, blind_control.id, IDS}
+),
+picking_names AS (
+    SELECT
+        (SELECT sp.partner_id FROM
+        blind_control bc
+        JOIN blind_control_stock_picking_rel bcspr ON bcspr.blind_control_id = bc.id
+        JOIN stock_picking sp ON sp.id = bcspr.stock_picking_id
+        WHERE $X{ IN, bc.id, IDS}
+        LIMIT 1
+        ) as partner_id,
+        bc.id AS blind_control_id,
+        string_agg(sp.name, ', ') AS name
+    FROM
+        blind_control bc
+        JOIN blind_control_stock_picking_rel bcspr ON bcspr.blind_control_id = bc.id
+        JOIN stock_picking sp ON sp.id = bcspr.stock_picking_id
+    WHERE $X{ IN, bc.id, IDS}
+    GROUP BY bc.id
+)
+SELECT bc.name bc_name, COALESCE(bcl.box_number, '0') box_number, rp.name partner,
+COALESCE(rp.street, '   ') street, COALESCE(rcs.name, '   ') state,
+COALESCE(rc.name, '   ') country, rp.zip, pp.default_code, pt.name product,
+bcl.product_qty, tb.total_box, pn.name,
+concat(pn.name, tb.total_box::text, COALESCE(bcl.box_number, '0')::text) barcode
+FROM total_box tb, blind_control bc
+JOIN picking_names pn ON pn.blind_control_id = bc.id
+LEFT JOIN blind_control_line bcl ON bcl.control_id = bc.id
+LEFT JOIN product_product pp ON pp.id = bcl.product_id
+LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
+left JOIN res_partner rp ON rp.id = pn.partner_id
+LEFT JOIN res_country_state rcs ON rcs.id = rp.state_id
+LEFT JOIN res_country rc ON rc.id = rp.country_id
+WHERE $X{ IN, bc.id, IDS}
+order by bcl.box_number]]>
+	</queryString>
+	<field name="bc_name" class="java.lang.String"/>
+	<field name="box_number" class="java.lang.Integer"/>
+	<field name="partner" class="java.lang.String"/>
+	<field name="street" class="java.lang.String"/>
+	<field name="state" class="java.lang.String"/>
+	<field name="country" class="java.lang.String"/>
+	<field name="zip" class="java.lang.String"/>
+	<field name="default_code" class="java.lang.String"/>
+	<field name="product" class="java.lang.String"/>
+	<field name="product_qty" class="java.lang.Integer"/>
+	<field name="total_box" class="java.lang.Long"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="barcode" class="java.lang.String"/>
+	<variable name="Qty SUM" class="java.lang.Integer" resetType="Group" resetGroup="Box Group" calculation="Sum">
+		<variableExpression><![CDATA[$F{product_qty}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{product_qty}]]></initialValueExpression>
+	</variable>
+	<group name="Box Group" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{box_number}]]></groupExpression>
+		<groupHeader>
+			<band height="380" splitType="Prevent">
+				<rectangle>
+					<reportElement x="129" y="204" width="415" height="96"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="143" y="216" width="54" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[CLIENTE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="197" y="216" width="310" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{partner}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="143" y="242" width="65" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[DIRECCIÓN:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="208" y="242" width="299" height="20"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{street} + ", " + $F{state} + ", " + $F{country}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="143" y="270" width="22" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[C.P:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="165" y="270" width="100" height="20"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{zip}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="141" y="300" width="96" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[DESPACHO N°:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="141" y="330" width="108" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL DE CAJAS:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="141" y="360" width="52" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[CAJA N°:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="239" y="300" width="268" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="251" y="330" width="100" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{total_box}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="195" y="360" width="100" height="20"/>
+					<textElement lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{box_number}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+</jasperReport>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payment_receipt_order_v11_subreport_invoices_debit_notes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row_style" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 1]]></conditionExpression>
+			<style mode="Opaque" forecolor="#000000" backcolor="#DFDBDB" hAlign="Center" vAlign="Middle" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{COLUMN_COUNT}%2 == 0]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#F1F9FF" hAlign="Center" vAlign="Middle" rotation="None" lineSpacing="Single" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="IDS" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT    apo.id AS "Voucher_id",
+	apo.type AS "Voucher_type",
+	apol.type	AS "Lines_type",
+	CASE WHEN rc.currency_unit_label is null THEN rcompcurr.currency_unit_label
+		ELSE rc.currency_unit_label
+	END AS "Currency",
+	CASE WHEN apol.invoice_id is null THEN am.name
+	     WHEN ai.type = 'out_invoice' OR ai.type = 'in_invoice' AND ai.is_debit_note = False THEN ('FC ' || iden.name || ai.internal_number)
+	     WHEN ai.type = 'out_invoice' OR ai.type = 'in_invoice' AND ai.is_debit_note = True THEN ('ND ' || iden.name || ai.internal_number)
+	     ELSE ('NC ' || iden.name || ai.internal_number)
+	END AS "Invoice",
+	ai.origin 	AS "Invoice_origin",
+	CASE WHEN apol.invoice_id is null THEN am.date
+	     ELSE 	ai.date_invoice
+	END AS "Invoice_date",
+	ai.date_due AS "Invoice_due_date",
+	ai.amount_untaxed AS "Invoice_amount_untaxed",
+	apol.amount_original AS "Invoice_amount_total",
+	apol.amount_unreconciled AS "Invoice_initial_amount_unreconciled",
+	(apol.amount_unreconciled - apol.amount) AS "Invoice_final_amount_unreconciled",
+	apol.amount AS "Invoice_payment_order_paid"
+
+FROM account_payment_order_line apol
+	JOIN account_payment_order apo ON apo.id = apol.payment_order_id
+	LEFT JOIN account_invoice ai ON ai.id = apol.invoice_id
+	LEFT JOIN invoice_denomination iden	ON iden.id = ai.denomination_id
+	LEFT JOIN account_journal aj ON aj.id = apo.journal_id
+	LEFT JOIN res_currency rc ON rc.id = aj.currency_id
+	JOIN res_company rcomp ON rcomp.id = aj.company_id
+	JOIN res_currency rcompcurr ON rcompcurr.id = rcomp.currency_id
+	JOIN account_move_line aml ON aml.id = apol.move_line_id
+	JOIN account_move am ON am.id = aml.move_id
+
+WHERE apo.id IN ($P{IDS}) AND ( (apo.type = 'receipt' AND apol.type = 'debt') OR (apo.type = 'payment' AND apol.type = 'income') ) AND apol.amount != 0
+
+ORDER BY apo.type, apol.type, apo.id]]>
+	</queryString>
+	<field name="Voucher_id" class="java.lang.Integer"/>
+	<field name="Voucher_type" class="java.lang.String"/>
+	<field name="Lines_type" class="java.lang.String"/>
+	<field name="Currency" class="java.lang.String"/>
+	<field name="Invoice" class="java.lang.String"/>
+	<field name="Invoice_origin" class="java.lang.String"/>
+	<field name="Invoice_date" class="java.sql.Date"/>
+	<field name="Invoice_due_date" class="java.sql.Date"/>
+	<field name="Invoice_amount_untaxed" class="java.math.BigDecimal"/>
+	<field name="Invoice_amount_total" class="java.math.BigDecimal"/>
+	<field name="Invoice_initial_amount_unreconciled" class="java.math.BigDecimal"/>
+	<field name="Invoice_final_amount_unreconciled" class="java.math.BigDecimal"/>
+	<field name="Invoice_payment_order_paid" class="java.math.BigDecimal"/>
+	<variable name="sum_amount" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Invoice_payment_order_paid}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="132" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="4">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notas de Crédito     ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="95" height="15"/>
+				<box leftPadding="4"/>
+				<textElement lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comprobante]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="0" width="70" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="0" width="70" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Final]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Abonado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="225" y="0" width="90" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Comprobante]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="13" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="16" width="555" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="165" y="0" width="70" height="15"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Venc.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="row_style" x="0" y="0" width="95" height="15"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="row_style" x="95" y="0" width="70" height="15"/>
+				<textElement lineSpacing="Single">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Invoice_date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="row_style" x="395" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_final_amount_unreconciled}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="row_style" x="475" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_payment_order_paid}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="row_style" x="235" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_amount_total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="15" width="555" height="1"/>
+			</line>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="row_style" x="165" y="0" width="70" height="15"/>
+				<textElement lineSpacing="Single">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{Invoice_due_date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="row_style" x="315" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Invoice_initial_amount_unreconciled}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="16" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="245" y="0" width="230" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Abonado en Notas de Crédito]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="475" y="0" width="80" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{sum_amount}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="15" width="555" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
